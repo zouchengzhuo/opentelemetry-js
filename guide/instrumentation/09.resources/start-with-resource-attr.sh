@@ -1,0 +1,1 @@
+env OTEL_RESOURCE_ATTRIBUTES="host.name=localhost" ts-node app.ts >> detect.log
