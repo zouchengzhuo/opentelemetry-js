@@ -36,12 +36,13 @@ export function registerGlobal<Type extends keyof OTelGlobalAPI>(
   diag: DiagLogger,
   allowOverride = false
 ): boolean {
+  // 若 _global[GLOBAL_OPENTELEMETRY_API_KEY] 没有初始化，对其初始化；api 设置为 _global[GLOBAL_OPENTELEMETRY_API_KEY]
   const api = (_global[GLOBAL_OPENTELEMETRY_API_KEY] = _global[
     GLOBAL_OPENTELEMETRY_API_KEY
   ] ?? {
     version: VERSION,
   });
-
+  // 判断重复注册的组件
   if (!allowOverride && api[type]) {
     // already registered an API of this type
     const err = new Error(
@@ -50,7 +51,7 @@ export function registerGlobal<Type extends keyof OTelGlobalAPI>(
     diag.error(err.stack || err.message);
     return false;
   }
-
+  // 如果之前已经初始化过别的版本的 API 了，需要报错
   if (api.version !== VERSION) {
     // All registered APIs must be of the same version exactly
     const err = new Error(
@@ -59,7 +60,7 @@ export function registerGlobal<Type extends keyof OTelGlobalAPI>(
     diag.error(err.stack || err.message);
     return false;
   }
-
+  // 将 TracerProvider / ContextManager / MeterProvider / TextMapPropagator 设置给 global 对象
   api[type] = instance;
   diag.debug(
     `@opentelemetry/api: Registered a global for ${type} v${VERSION}.`

@@ -1,0 +1,2127 @@
+<svg version="1.1" baseProfile="full" width="16384.5" height="627.0" viewbox="0 0 16384.5 627" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+[ContextAPI|+_instance?: ContextAPI|\#getInstance(): ContextAPI;\#setGlobalContextManager(): boolean;\#active(): Context;\#with(): ReturnType&lt;F&gt;;\#bind(): T;+_getContextManager(): ContextManager;\#disable(): void]
+[DiagAPI|+_instance?: DiagAPI;\#setLogger: { (logger: DiagLogger, options?: DiagLoggerOptions \| undefined): boolean; (logger: DiagLogger, logLevel?: DiagLogLevel \| undefined): boolean; };\#createComponentLogger: (options: ComponentLoggerOptions) =&gt; DiagLogger;\#verbose: DiagLogFunction;\#debug: DiagLogFunction;\#info: DiagLogFunction;\#warn: DiagLogFunction;\#error: DiagLogFunction;\#disable: () =&gt; void|\#instance(): DiagAPI]
+[DiagLogger]&lt;:--[DiagAPI]
+[DiagLoggerApi]&lt;:--[DiagAPI]
+[MetricsAPI|+_instance?: MetricsAPI|\#getInstance(): MetricsAPI;\#setGlobalMeterProvider(): boolean;\#getMeterProvider(): MeterProvider;\#getMeter(): Meter;\#disable(): void]
+[PropagationAPI|+_instance?: PropagationAPI;\#createBaggage: (entries?: Record&lt;string, BaggageEntry&gt;) =&gt; Baggage;\#getBaggage: (context: Context) =&gt; Baggage \| undefined;\#getActiveBaggage: () =&gt; Baggage \| undefined;\#setBaggage: (context: Context, baggage: Baggage) =&gt; Context;\#deleteBaggage: (context: Context) =&gt; Context|\#getInstance(): PropagationAPI;\#setGlobalPropagator(): boolean;\#inject(): void;\#extract(): Context;\#fields(): string\[\];\#disable(): void;+_getGlobalPropagator(): TextMapPropagator&lt;any&gt;]
+[TraceAPI|+_instance?: TraceAPI;+_proxyTracerProvider: ProxyTracerProvider;\#wrapSpanContext: (spanContext: SpanContext) =&gt; Span;\#isSpanContextValid: (spanContext: SpanContext) =&gt; boolean;\#deleteSpan: (context: Context) =&gt; Context;\#getSpan: (context: Context) =&gt; Span \| undefined;\#getActiveSpan: () =&gt; Span \| undefined;\#getSpanContext: (context: Context) =&gt; SpanContext \| undefined;\#setSpan: (context: Context, span: Span) =&gt; Context;\#setSpanContext: (context: Context, spanContext: SpanContext) =&gt; Context|\#getInstance(): TraceAPI;\#setGlobalTracerProvider(): boolean;\#getTracerProvider(): TracerProvider;\#getTracer(): Tracer;\#disable(): void]
+[&lt;interface&gt;BaggageEntry|+value: string;+metadata?: BaggageEntryMetadata|]
+[&lt;interface&gt;Baggage||+getEntry(): BaggageEntry \| undefined;+getAllEntries(): \[string, BaggageEntry\]\[\];+setEntry(): Baggage;+removeEntry(): Baggage;+removeEntries(): Baggage;+clear(): Baggage]
+[&lt;interface&gt;Attributes||]
+[&lt;interface&gt;ExceptionWithCode|+code: string \| number;+name?: string;+message?: string;+stack?: string|]
+[&lt;interface&gt;ExceptionWithMessage|+code?: string \| number;+message: string;+name?: string;+stack?: string|]
+[&lt;interface&gt;ExceptionWithName|+code?: string \| number;+message?: string;+name: string;+stack?: string|]
+[BaseContext|+_currentContext: Map&lt;symbol, unknown&gt;;\#getValue: (key: symbol) =&gt; unknown;\#setValue: (key: symbol, value: unknown) =&gt; Context;\#deleteValue: (key: symbol) =&gt; Context|]
+[Context]&lt;:--[BaseContext]
+[NoopContextManager||+active(): Context;+with(): ReturnType&lt;F&gt;;+bind(): T;+enable(): this;+disable(): this]
+[ContextManager]&lt;:--[NoopContextManager]
+[&lt;interface&gt;Context||+getValue(): unknown;+setValue(): Context;+deleteValue(): Context]
+[&lt;interface&gt;ContextManager||+active(): Context;+with(): ReturnType&lt;F&gt;;+bind(): T;+enable(): this;+disable(): this]
+[DiagComponentLogger|+_namespace: string|\#debug(): void;\#error(): void;\#info(): void;\#warn(): void;\#verbose(): void]
+[DiagLogger]&lt;:--[DiagComponentLogger]
+[DiagConsoleLogger|\#error: DiagLogFunction;\#warn: DiagLogFunction;\#info: DiagLogFunction;\#debug: DiagLogFunction;\#verbose: DiagLogFunction|]
+[DiagLogger]&lt;:--[DiagConsoleLogger]
+[&lt;interface&gt;DiagLogger|+error: DiagLogFunction;+warn: DiagLogFunction;+info: DiagLogFunction;+debug: DiagLogFunction;+verbose: DiagLogFunction|]
+[&lt;interface&gt;ComponentLoggerOptions|+namespace: string|]
+[&lt;interface&gt;DiagLoggerOptions|+logLevel?: DiagLogLevel;+suppressOverrideMessage?: boolean|]
+[&lt;interface&gt;DiagLoggerApi||+setLogger(): boolean;+setLogger(): boolean]
+[&lt;enumeration&gt;DiagLogLevel|NONE;ERROR;WARN;INFO;DEBUG;VERBOSE;ALL]
+[&lt;type&gt;OTelGlobal|+__computed?: OTelGlobalAPI|]
+[&lt;type&gt;OTelGlobalAPI|+version: string;+diag?: DiagLogger;+trace?: TracerProvider;+context?: ContextManager;+metrics?: MeterProvider;+propagation?: TextMapPropagator&lt;any&gt;|]
+[&lt;interface&gt;MeterOptions|+schemaUrl?: string|]
+[&lt;interface&gt;Meter||+createHistogram(): Histogram&lt;AttributesTypes&gt;;+createCounter(): Counter&lt;AttributesTypes&gt;;+createUpDownCounter(): UpDownCounter&lt;AttributesTypes&gt;;+createObservableGauge(): ObservableGauge&lt;AttributesTypes&gt;;+createObservableCounter(): ObservableCounter&lt;AttributesTypes&gt;;+createObservableUpDownCounter(): ObservableUpDownCounter&lt;AttributesTypes&gt;;+addBatchObservableCallback(): void;+removeBatchObservableCallback(): void]
+[&lt;interface&gt;MeterProvider||+getMeter(): Meter]
+[&lt;interface&gt;MetricAdvice|+explicitBucketBoundaries?: number\[\]|]
+[&lt;interface&gt;MetricOptions|+description?: string;+unit?: string;+valueType?: ValueType;+advice?: MetricAdvice|]
+[&lt;interface&gt;Counter&lt;AttributesTypes&gt;||+add(): void]
+[&lt;interface&gt;UpDownCounter&lt;AttributesTypes&gt;||+add(): void]
+[&lt;interface&gt;Histogram&lt;AttributesTypes&gt;||+record(): void]
+[&lt;interface&gt;Observable&lt;AttributesTypes&gt;||+addCallback(): void;+removeCallback(): void]
+[&lt;enumeration&gt;ValueType|INT;DOUBLE]
+[NoopMeter||+createHistogram(): Histogram&lt;Attributes&gt;;+createCounter(): Counter&lt;Attributes&gt;;+createUpDownCounter(): UpDownCounter&lt;Attributes&gt;;+createObservableGauge(): ObservableGauge;+createObservableCounter(): ObservableCounter;+createObservableUpDownCounter(): ObservableUpDownCounter;+addBatchObservableCallback(): void;+removeBatchObservableCallback(): void]
+[NoopMetric||]
+[NoopCounterMetric||+add(): void]
+[NoopUpDownCounterMetric||+add(): void]
+[NoopHistogramMetric||+record(): void]
+[NoopObservableMetric||+addCallback(): void;+removeCallback(): void]
+[NoopObservableCounterMetric||]
+[NoopObservableGaugeMetric||]
+[NoopObservableUpDownCounterMetric||]
+[Meter]&lt;:--[NoopMeter]
+[NoopMetric]&lt;:-[NoopCounterMetric]
+[Counter&lt;AttributesTypes&gt;]&lt;:--[NoopCounterMetric]
+[NoopMetric]&lt;:-[NoopUpDownCounterMetric]
+[UpDownCounter&lt;AttributesTypes&gt;]&lt;:--[NoopUpDownCounterMetric]
+[NoopMetric]&lt;:-[NoopHistogramMetric]
+[Histogram&lt;AttributesTypes&gt;]&lt;:--[NoopHistogramMetric]
+[NoopObservableMetric]&lt;:-[NoopObservableCounterMetric]
+[Observable&lt;AttributesTypes&gt;]&lt;:--[NoopObservableCounterMetric]
+[NoopObservableMetric]&lt;:-[NoopObservableGaugeMetric]
+[Observable&lt;AttributesTypes&gt;]&lt;:--[NoopObservableGaugeMetric]
+[NoopObservableMetric]&lt;:-[NoopObservableUpDownCounterMetric]
+[Observable&lt;AttributesTypes&gt;]&lt;:--[NoopObservableUpDownCounterMetric]
+[NoopMeterProvider||+getMeter(): Meter]
+[MeterProvider]&lt;:--[NoopMeterProvider]
+[&lt;interface&gt;ObservableResult&lt;AttributesTypes&gt;||+observe(): void]
+[&lt;interface&gt;BatchObservableResult&lt;AttributesTypes&gt;||+observe(): void]
+[NoopTextMapPropagator||+inject(): void;+extract(): Context;+fields(): string\[\]]
+[TextMapPropagator&lt;Carrier&gt;]&lt;:--[NoopTextMapPropagator]
+[&lt;interface&gt;TextMapPropagator&lt;Carrier&gt;||+inject(): void;+extract(): Context;+fields(): string\[\]]
+[&lt;interface&gt;TextMapSetter&lt;Carrier&gt;||+set(): void]
+[&lt;interface&gt;TextMapGetter&lt;Carrier&gt;||+keys(): string\[\];+get(): string \| string\[\] \| undefined]
+[&lt;interface&gt;Link|+context: SpanContext;+attributes?: Attributes;+droppedAttributesCount?: number|]
+[NonRecordingSpan|+abstract _spanContext: SpanContext|+spanContext(): SpanContext;+setAttribute(): this;+setAttributes(): this;+addEvent(): this;+setStatus(): this;+updateName(): this;+end(): void;+isRecording(): boolean;+recordException(): void]
+[Span]&lt;:--[NonRecordingSpan]
+[NoopTracer||+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt; \| undefined]
+[Tracer]&lt;:--[NoopTracer]
+[NoopTracerProvider||+getTracer(): Tracer]
+[TracerProvider]&lt;:--[NoopTracerProvider]
+[ProxyTracer|+_delegate?: Tracer;+_provider: TracerDelegator;\#abstract name: string;\#abstract version?: string;\#abstract options?: TracerOptions|+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt;;+_getTracer(): Tracer]
+[&lt;interface&gt;TracerDelegator||+getDelegateTracer(): Tracer \| undefined]
+[Tracer]&lt;:--[ProxyTracer]
+[ProxyTracerProvider|+_delegate?: TracerProvider|+getTracer(): Tracer;+getDelegate(): TracerProvider;+setDelegate(): void;+getDelegateTracer(): Tracer \| undefined]
+[TracerProvider]&lt;:--[ProxyTracerProvider]
+[&lt;interface&gt;Sampler||+shouldSample(): SamplingResult;+toString(): string]
+[&lt;interface&gt;SamplingResult|+decision: SamplingDecision;+attributes?: Readonly&lt;Attributes&gt;;+traceState?: TraceState|]
+[&lt;enumeration&gt;SamplingDecision|NOT_RECORD;RECORD;RECORD_AND_SAMPLED]
+[&lt;interface&gt;SpanContext|+traceId: string;+spanId: string;+isRemote?: boolean;+traceFlags: number;+traceState?: TraceState|]
+[&lt;enumeration&gt;SpanKind|INTERNAL;SERVER;CLIENT;PRODUCER;CONSUMER]
+[&lt;interface&gt;Span||+spanContext(): SpanContext;+setAttribute(): this;+setAttributes(): this;+addEvent(): this;+setStatus(): this;+updateName(): this;+end(): void;+isRecording(): boolean;+recordException(): void]
+[&lt;interface&gt;SpanOptions|+kind?: SpanKind;+attributes?: Attributes;+links?: Link\[\];+startTime?: TimeInput;+root?: boolean|]
+[&lt;interface&gt;SpanStatus|+code: SpanStatusCode;+message?: string|]
+[&lt;enumeration&gt;SpanStatusCode|UNSET;OK;ERROR]
+[&lt;enumeration&gt;TraceFlags|NONE;SAMPLED]
+[&lt;interface&gt;TraceState||+set(): TraceState;+unset(): TraceState;+get(): string \| undefined;+serialize(): string]
+[&lt;interface&gt;TracerOptions|+schemaUrl?: string|]
+[&lt;interface&gt;TracerProvider||+getTracer(): Tracer]
+[&lt;interface&gt;Tracer||+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt;;+startActiveSpan(): ReturnType&lt;F&gt;;+startActiveSpan(): ReturnType&lt;F&gt;]
+[BaggageImpl|+_entries: Map&lt;string, BaggageEntry&gt;|+getEntry(): BaggageEntry \| undefined;+getAllEntries(): \[string, BaggageEntry\]\[\];+setEntry(): BaggageImpl;+removeEntry(): BaggageImpl;+removeEntries(): BaggageImpl;+clear(): BaggageImpl]
+[Baggage]&lt;:--[BaggageImpl]
+[TraceStateImpl|+_internalState: Map&lt;string, string&gt;|+set(): TraceStateImpl;+unset(): TraceStateImpl;+get(): string \| undefined;+serialize(): string;+_parse(): void;+_keys(): string\[\];+_clone(): TraceStateImpl]
+[TraceState]&lt;:--[TraceStateImpl]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="transparent">
+<rect x="0.0" y="0.0" height="627.0" width="16384.5" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<g stroke-dasharray="6 6">
+<path d="M764.2 216.4 L627.5 308 L609.6201413427561 328 L609.6 328.0 " fill="none"></path>
+</g>
+<path d="M767.1 220.9 L764.2 216.4 L761.2 212.0 L775.2 209.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M481.0 199.8 L481 308 L483.82685512367493 328 L483.8 328.0 " fill="none"></path>
+</g>
+<path d="M486.3 199.8 L481.0 199.8 L475.7 199.8 L481.0 186.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M4323.8 207.3 L4323.75 308 L4323.75 392 L4323.8 392.0 " fill="none"></path>
+</g>
+<path d="M4329.1 207.3 L4323.8 207.3 L4318.4 207.3 L4323.8 194.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M4682.3 222.3 L4682.25 308 L4682.25 384.5 L4682.3 384.5 " fill="none"></path>
+</g>
+<path d="M4687.6 222.3 L4682.3 222.3 L4676.9 222.3 L4682.3 209.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M926.9 219.8 L990.5 308 L990.5 373 L990.5 373.0 " fill="none"></path>
+</g>
+<path d="M931.2 216.7 L926.9 219.8 L922.6 222.9 L919.1 209.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1002.4 163.2 L1984 308 L1984 384.5 L1984.0 384.5 " fill="none"></path>
+</g>
+<path d="M1003.2 157.9 L1002.4 163.2 L1001.7 168.5 L989.3 161.3 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M6854.3 244.8 L6854.25 308 L6854.25 362 L6854.3 362.0 " fill="none"></path>
+</g>
+<path d="M6859.6 244.8 L6854.3 244.8 L6848.9 244.8 L6854.3 231.5 Z"></path>
+<path d="M8342.0 179.4 L8277.75 308 L8200.979681978799 414.5 L8201.0 414.5 " fill="none"></path>
+<path d="M8346.8 181.8 L8342.0 179.4 L8337.3 177.0 L8348.0 167.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M8155.8 192.3 L8155.75 308 L8170.803003533569 414.5 L8170.8 414.5 " fill="none"></path>
+</g>
+<path d="M8161.1 192.3 L8155.8 192.3 L8150.4 192.3 L8155.8 179.0 Z"></path>
+<path d="M8364.2 180.7 L8379.75 308 L8459.154593639576 414.5 L8459.2 414.5 " fill="none"></path>
+<path d="M8369.5 180.1 L8364.2 180.7 L8358.9 181.4 L8362.6 167.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M8643.5 192.3 L8643.5 308 L8524.393109540637 414.5 L8524.4 414.5 " fill="none"></path>
+</g>
+<path d="M8648.8 192.3 L8643.5 192.3 L8638.2 192.3 L8643.5 179.0 Z"></path>
+<path d="M8392.9 176.9 L8525 308 L8693.217314487632 414.5 L8693.2 414.5 " fill="none"></path>
+<path d="M8396.6 173.1 L8392.9 176.9 L8389.1 180.7 L8383.4 167.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M8947.0 192.3 L8947 308 L8797.598939929328 414.5 L8797.6 414.5 " fill="none"></path>
+</g>
+<path d="M8952.3 192.3 L8947.0 192.3 L8941.7 192.3 L8947.0 179.0 Z"></path>
+<path d="M9285.0 194.7 L9138.5 308 L9302.574204946997 426 L9302.6 426.0 " fill="none"></path>
+<path d="M9288.3 198.9 L9285.0 194.7 L9281.8 190.4 L9295.6 186.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M9806.3 195.8 L9691.75 308 L9394.456713780919 426 L9394.5 426.0 " fill="none"></path>
+</g>
+<path d="M9810.0 199.6 L9806.3 195.8 L9802.6 192.0 L9815.8 186.5 Z"></path>
+<path d="M9388.6 197.3 L9467.75 308 L9603.262367491167 426 L9603.3 426.0 " fill="none"></path>
+<path d="M9393.0 194.2 L9388.6 197.3 L9384.3 200.4 L9380.9 186.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M9859.3 199.8 L9859.25 308 L9668.281802120142 426 L9668.3 426.0 " fill="none"></path>
+</g>
+<path d="M9864.6 199.8 L9859.3 199.8 L9853.9 199.8 L9859.3 186.5 Z"></path>
+<path d="M9440.3 192.9 L9651.75 308 L9907.347173144877 426 L9907.3 426.0 " fill="none"></path>
+<path d="M9442.8 188.2 L9440.3 192.9 L9437.7 197.6 L9428.6 186.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M9997.2 178.8 L10509.75 308 L10049.84187279152 426 L10049.8 426.0 " fill="none"></path>
+</g>
+<path d="M9998.5 173.6 L9997.2 178.8 L9995.9 183.9 L9984.3 175.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M7316.3 192.3 L7316.25 308 L7316.25 414.5 L7316.3 414.5 " fill="none"></path>
+</g>
+<path d="M7321.6 192.3 L7316.3 192.3 L7310.9 192.3 L7316.3 179.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M10872.3 207.3 L10872.25 308 L10872.25 399.5 L10872.3 399.5 " fill="none"></path>
+</g>
+<path d="M10877.6 207.3 L10872.3 207.3 L10866.9 207.3 L10872.3 194.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M12059.3 252.3 L12059.25 308 L12059.25 343 L12059.3 343.0 " fill="none"></path>
+</g>
+<path d="M12064.6 252.3 L12059.3 252.3 L12053.9 252.3 L12059.3 239.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M12571.8 209.9 L12451.75 308 L12451.75 407 L12451.8 407.0 " fill="none"></path>
+</g>
+<path d="M12575.2 214.1 L12571.8 209.9 L12568.4 205.8 L12582.1 201.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M13215.3 188.9 L13107.25 308 L13107.25 414.5 L13107.3 414.5 " fill="none"></path>
+</g>
+<path d="M13219.2 192.5 L13215.3 188.9 L13211.3 185.3 L13224.3 179.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M12725.6 210.5 L12832.75 308 L12832.75 358 L12832.8 358.0 " fill="none"></path>
+</g>
+<path d="M12729.1 206.5 L12725.6 210.5 L12722.0 214.4 L12715.7 201.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M13356.7 157.8 L14453 308 L14453 380.5 L14453.0 380.5 " fill="none"></path>
+</g>
+<path d="M13357.4 152.5 L13356.7 157.8 L13356.0 163.1 L13343.5 156.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M3162.8 229.8 L3162.75 308 L3162.75 365.5 L3162.8 365.5 " fill="none"></path>
+</g>
+<path d="M3168.1 229.8 L3162.8 229.8 L3157.4 229.8 L3162.8 216.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M16009.0 214.8 L16009 308 L16009 358 L16009.0 358.0 " fill="none"></path>
+</g>
+<path d="M16014.3 214.8 L16009.0 214.8 L16003.7 214.8 L16009.0 201.5 Z"></path>
+<g data-name="ContextAPI">
+<g fill="#eee8d5" stroke="#33322E" data-name="ContextAPI">
+<rect x="0.0" y="52.5" height="183.0" width="345.0" data-name="ContextAPI"></rect>
+<path d="M0.0 83.5 L345.0 83.5" fill="none" data-name="ContextAPI"></path>
+<path d="M0.0 114.5 L345.0 114.5" fill="none" data-name="ContextAPI"></path>
+</g>
+<g transform="translate(0, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ContextAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContextAPI">
+<a id="src/api/context.ts.ContextAPI" xlink:href="src/api/context.ts"><text x="164.5" y="13.5" stroke="none" text-anchor="middle" data-name="ContextAPI">ContextAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContextAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContextAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="ContextAPI">+_instance?: ContextAPI</text>
+
+</g>
+</g>
+<g transform="translate(0, 114.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContextAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContextAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="ContextAPI">#getInstance(): ContextAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ContextAPI">#setGlobalContextManager(): boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ContextAPI">#active(): Context</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ContextAPI">#with(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="73.5" stroke="none" data-name="ContextAPI">#bind(): T</text>
+<text x="0.0" y="88.5" stroke="none" data-name="ContextAPI">+_getContextManager(): ContextManager</text>
+<text x="0.0" y="103.5" stroke="none" data-name="ContextAPI">#disable(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="DiagAPI">
+<g fill="#eee8d5" stroke="#33322E" data-name="DiagAPI">
+<rect x="151.0" y="328.0" height="243.0" width="700.0" data-name="DiagAPI"></rect>
+<path d="M151.0 359.0 L851.0 359.0" fill="none" data-name="DiagAPI"></path>
+<path d="M151.0 540.0 L851.0 540.0" fill="none" data-name="DiagAPI"></path>
+</g>
+<g transform="translate(151, 328)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DiagAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagAPI">
+<a id="src/api/diag.ts.DiagAPI" xlink:href="src/api/diag.ts"><text x="342.0" y="13.5" stroke="none" text-anchor="middle" data-name="DiagAPI">DiagAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(151, 359)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagAPI">+_instance?: DiagAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagAPI">#setLogger: { (logger: DiagLogger, options?: DiagLoggerOptions | undefined): boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DiagAPI">(logger: DiagLogger, logLevel?: DiagLogLevel | undefined): boolean</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DiagAPI">}</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DiagAPI">#createComponentLogger: (options: ComponentLoggerOptions) =&gt; DiagLogger</text>
+<text x="0.0" y="88.5" stroke="none" data-name="DiagAPI">#verbose: DiagLogFunction</text>
+<text x="0.0" y="103.5" stroke="none" data-name="DiagAPI">#debug: DiagLogFunction</text>
+<text x="0.0" y="118.5" stroke="none" data-name="DiagAPI">#info: DiagLogFunction</text>
+<text x="0.0" y="133.5" stroke="none" data-name="DiagAPI">#warn: DiagLogFunction</text>
+<text x="0.0" y="148.5" stroke="none" data-name="DiagAPI">#error: DiagLogFunction</text>
+<text x="0.0" y="163.5" stroke="none" data-name="DiagAPI">#disable: () =&gt; void</text>
+
+</g>
+</g>
+<g transform="translate(151, 540)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagAPI">#instance(): DiagAPI</text>
+
+</g>
+</g>
+</g>
+<g data-name="DiagLogger">
+<g fill="lightblue" stroke="#33322E" data-name="DiagLogger">
+<rect x="755.3" y="79.0" height="130.0" width="234.0" data-name="DiagLogger"></rect>
+<path d="M755.3 110.0 L989.3 110.0" fill="none" data-name="DiagLogger"></path>
+<path d="M755.3 201.0 L989.3 201.0" fill="none" data-name="DiagLogger"></path>
+</g>
+<g transform="translate(755.25, 79)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagLogger">
+<a id="src/diag/types.ts.DiagLogger" xlink:href="src/diag/types.ts"><text x="109.0" y="13.5" stroke="none" text-anchor="middle" data-name="DiagLogger">DiagLogger</text></a>
+
+</g>
+</g>
+<g transform="translate(755.25, 110)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagLogger">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagLogger">+error: DiagLogFunction</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagLogger">+warn: DiagLogFunction</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DiagLogger">+info: DiagLogFunction</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DiagLogger">+debug: DiagLogFunction</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DiagLogger">+verbose: DiagLogFunction</text>
+
+</g>
+</g>
+<g transform="translate(755.25, 201)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLogger">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DiagLogger">
+
+</g>
+</g>
+</g>
+<g data-name="DiagLoggerApi">
+<g fill="lightblue" stroke="#33322E" data-name="DiagLoggerApi">
+<rect x="385.0" y="101.5" height="85.0" width="192.0" data-name="DiagLoggerApi"></rect>
+<path d="M385.0 132.5 L577.0 132.5" fill="none" data-name="DiagLoggerApi"></path>
+<path d="M385.0 140.5 L577.0 140.5" fill="none" data-name="DiagLoggerApi"></path>
+</g>
+<g transform="translate(385, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerApi">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagLoggerApi">
+<a id="src/diag/types.ts.DiagLoggerApi" xlink:href="src/diag/types.ts"><text x="88.0" y="13.5" stroke="none" text-anchor="middle" data-name="DiagLoggerApi">DiagLoggerApi</text></a>
+
+</g>
+</g>
+<g transform="translate(385, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerApi">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DiagLoggerApi">
+
+</g>
+</g>
+<g transform="translate(385, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerApi">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagLoggerApi">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagLoggerApi">+setLogger(): boolean</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagLoggerApi">+setLogger(): boolean</text>
+
+</g>
+</g>
+</g>
+<g data-name="MetricsAPI">
+<g fill="#eee8d5" stroke="#33322E" data-name="MetricsAPI">
+<rect x="1029.3" y="67.5" height="153.0" width="298.0" data-name="MetricsAPI"></rect>
+<path d="M1029.3 98.5 L1327.3 98.5" fill="none" data-name="MetricsAPI"></path>
+<path d="M1029.3 129.5 L1327.3 129.5" fill="none" data-name="MetricsAPI"></path>
+</g>
+<g transform="translate(1029.25, 67.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="MetricsAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MetricsAPI">
+<a id="src/api/metrics.ts.MetricsAPI" xlink:href="src/api/metrics.ts"><text x="141.0" y="13.5" stroke="none" text-anchor="middle" data-name="MetricsAPI">MetricsAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(1029.25, 98.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricsAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MetricsAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="MetricsAPI">+_instance?: MetricsAPI</text>
+
+</g>
+</g>
+<g transform="translate(1029.25, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricsAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MetricsAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="MetricsAPI">#getInstance(): MetricsAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="MetricsAPI">#setGlobalMeterProvider(): boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="MetricsAPI">#getMeterProvider(): MeterProvider</text>
+<text x="0.0" y="58.5" stroke="none" data-name="MetricsAPI">#getMeter(): Meter</text>
+<text x="0.0" y="73.5" stroke="none" data-name="MetricsAPI">#disable(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="PropagationAPI">
+<g fill="#eee8d5" stroke="#33322E" data-name="PropagationAPI">
+<rect x="1367.3" y="15.0" height="258.0" width="587.0" data-name="PropagationAPI"></rect>
+<path d="M1367.3 46.0 L1954.3 46.0" fill="none" data-name="PropagationAPI"></path>
+<path d="M1367.3 152.0 L1954.3 152.0" fill="none" data-name="PropagationAPI"></path>
+</g>
+<g transform="translate(1367.25, 15)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="PropagationAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="PropagationAPI">
+<a id="src/api/propagation.ts.PropagationAPI" xlink:href="src/api/propagation.ts"><text x="285.5" y="13.5" stroke="none" text-anchor="middle" data-name="PropagationAPI">PropagationAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(1367.25, 46)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PropagationAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PropagationAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="PropagationAPI">+_instance?: PropagationAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="PropagationAPI">#createBaggage: (entries?: Record&lt;string, BaggageEntry&gt;) =&gt; Baggage</text>
+<text x="0.0" y="43.5" stroke="none" data-name="PropagationAPI">#getBaggage: (context: Context) =&gt; Baggage | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="PropagationAPI">#getActiveBaggage: () =&gt; Baggage | undefined</text>
+<text x="0.0" y="73.5" stroke="none" data-name="PropagationAPI">#setBaggage: (context: Context, baggage: Baggage) =&gt; Context</text>
+<text x="0.0" y="88.5" stroke="none" data-name="PropagationAPI">#deleteBaggage: (context: Context) =&gt; Context</text>
+
+</g>
+</g>
+<g transform="translate(1367.25, 152)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="PropagationAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="PropagationAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="PropagationAPI">#getInstance(): PropagationAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="PropagationAPI">#setGlobalPropagator(): boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="PropagationAPI">#inject(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="PropagationAPI">#extract(): Context</text>
+<text x="0.0" y="73.5" stroke="none" data-name="PropagationAPI">#fields(): string[]</text>
+<text x="0.0" y="88.5" stroke="none" data-name="PropagationAPI">#disable(): void</text>
+<text x="0.0" y="103.5" stroke="none" data-name="PropagationAPI">+_getGlobalPropagator(): TextMapPropagator&lt;any&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceAPI">
+<g fill="#eee8d5" stroke="#33322E" data-name="TraceAPI">
+<rect x="1994.3" y="0.0" height="288.0" width="616.0" data-name="TraceAPI"></rect>
+<path d="M1994.3 31.0 L2610.3 31.0" fill="none" data-name="TraceAPI"></path>
+<path d="M1994.3 197.0 L2610.3 197.0" fill="none" data-name="TraceAPI"></path>
+</g>
+<g transform="translate(1994.25, 0)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TraceAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceAPI">
+<a id="src/api/trace.ts.TraceAPI" xlink:href="src/api/trace.ts"><text x="300.0" y="13.5" stroke="none" text-anchor="middle" data-name="TraceAPI">TraceAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(1994.25, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceAPI">+_instance?: TraceAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceAPI">+_proxyTracerProvider: ProxyTracerProvider</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceAPI">#wrapSpanContext: (spanContext: SpanContext) =&gt; Span</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceAPI">#isSpanContextValid: (spanContext: SpanContext) =&gt; boolean</text>
+<text x="0.0" y="73.5" stroke="none" data-name="TraceAPI">#deleteSpan: (context: Context) =&gt; Context</text>
+<text x="0.0" y="88.5" stroke="none" data-name="TraceAPI">#getSpan: (context: Context) =&gt; Span | undefined</text>
+<text x="0.0" y="103.5" stroke="none" data-name="TraceAPI">#getActiveSpan: () =&gt; Span | undefined</text>
+<text x="0.0" y="118.5" stroke="none" data-name="TraceAPI">#getSpanContext: (context: Context) =&gt; SpanContext | undefined</text>
+<text x="0.0" y="133.5" stroke="none" data-name="TraceAPI">#setSpan: (context: Context, span: Span) =&gt; Context</text>
+<text x="0.0" y="148.5" stroke="none" data-name="TraceAPI">#setSpanContext: (context: Context, spanContext: SpanContext) =&gt; Context</text>
+
+</g>
+</g>
+<g transform="translate(1994.25, 197)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceAPI">#getInstance(): TraceAPI</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceAPI">#setGlobalTracerProvider(): boolean</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceAPI">#getTracerProvider(): TracerProvider</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceAPI">#getTracer(): Tracer</text>
+<text x="0.0" y="73.5" stroke="none" data-name="TraceAPI">#disable(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="BaggageEntry">
+<g fill="lightblue" stroke="#33322E" data-name="BaggageEntry">
+<rect x="2650.3" y="101.5" height="85.0" width="306.0" data-name="BaggageEntry"></rect>
+<path d="M2650.3 132.5 L2956.3 132.5" fill="none" data-name="BaggageEntry"></path>
+<path d="M2650.3 178.5 L2956.3 178.5" fill="none" data-name="BaggageEntry"></path>
+</g>
+<g transform="translate(2650.25, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaggageEntry">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BaggageEntry">
+<a id="src/baggage/types.ts.BaggageEntry" xlink:href="src/baggage/types.ts"><text x="145.0" y="13.5" stroke="none" text-anchor="middle" data-name="BaggageEntry">BaggageEntry</text></a>
+
+</g>
+</g>
+<g transform="translate(2650.25, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaggageEntry">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BaggageEntry">
+<text x="0.0" y="13.5" stroke="none" data-name="BaggageEntry">+value: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="BaggageEntry">+metadata?: BaggageEntryMetadata</text>
+
+</g>
+</g>
+<g transform="translate(2650.25, 178.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaggageEntry">
+<g transform="translate(8, 8)" fill="#33322E" data-name="BaggageEntry">
+
+</g>
+</g>
+</g>
+<g data-name="Baggage">
+<g fill="lightblue" stroke="#33322E" data-name="Baggage">
+<rect x="2996.3" y="71.5" height="145.0" width="333.0" data-name="Baggage"></rect>
+<path d="M2996.3 102.5 L3329.3 102.5" fill="none" data-name="Baggage"></path>
+<path d="M2996.3 110.5 L3329.3 110.5" fill="none" data-name="Baggage"></path>
+</g>
+<g transform="translate(2996.25, 71.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Baggage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Baggage">
+<a id="src/baggage/types.ts.Baggage" xlink:href="src/baggage/types.ts"><text x="158.5" y="13.5" stroke="none" text-anchor="middle" data-name="Baggage">Baggage</text></a>
+
+</g>
+</g>
+<g transform="translate(2996.25, 102.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Baggage">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Baggage">
+
+</g>
+</g>
+<g transform="translate(2996.25, 110.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Baggage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Baggage">
+<text x="0.0" y="13.5" stroke="none" data-name="Baggage">+getEntry(): BaggageEntry | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Baggage">+getAllEntries(): [string, BaggageEntry][]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Baggage">+setEntry(): Baggage</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Baggage">+removeEntry(): Baggage</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Baggage">+removeEntries(): Baggage</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Baggage">+clear(): Baggage</text>
+
+</g>
+</g>
+</g>
+<g data-name="Attributes">
+<g fill="lightblue" stroke="#33322E" data-name="Attributes">
+<rect x="3369.3" y="120.5" height="47.0" width="91.0" data-name="Attributes"></rect>
+<path d="M3369.3 151.5 L3460.3 151.5" fill="none" data-name="Attributes"></path>
+<path d="M3369.3 159.5 L3460.3 159.5" fill="none" data-name="Attributes"></path>
+</g>
+<g transform="translate(3369.25, 120.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Attributes">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Attributes">
+<a id="src/common/Attributes.ts.Attributes" xlink:href="src/common/Attributes.ts"><text x="37.5" y="13.5" stroke="none" text-anchor="middle" data-name="Attributes">Attributes</text></a>
+
+</g>
+</g>
+<g transform="translate(3369.25, 151.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Attributes">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Attributes">
+
+</g>
+</g>
+<g transform="translate(3369.25, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Attributes">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Attributes">
+
+</g>
+</g>
+</g>
+<g data-name="ExceptionWithCode">
+<g fill="lightblue" stroke="#33322E" data-name="ExceptionWithCode">
+<rect x="3500.3" y="86.5" height="115.0" width="194.0" data-name="ExceptionWithCode"></rect>
+<path d="M3500.3 117.5 L3694.3 117.5" fill="none" data-name="ExceptionWithCode"></path>
+<path d="M3500.3 193.5 L3694.3 193.5" fill="none" data-name="ExceptionWithCode"></path>
+</g>
+<g transform="translate(3500.25, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExceptionWithCode">
+<a id="src/common/Exception.ts.ExceptionWithCode" xlink:href="src/common/Exception.ts"><text x="89.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExceptionWithCode">ExceptionWithCode</text></a>
+
+</g>
+</g>
+<g transform="translate(3500.25, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExceptionWithCode">
+<text x="0.0" y="13.5" stroke="none" data-name="ExceptionWithCode">+code: string | number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ExceptionWithCode">+name?: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ExceptionWithCode">+message?: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ExceptionWithCode">+stack?: string</text>
+
+</g>
+</g>
+<g transform="translate(3500.25, 193.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithCode">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ExceptionWithCode">
+
+</g>
+</g>
+</g>
+<g data-name="ExceptionWithMessage">
+<g fill="lightblue" stroke="#33322E" data-name="ExceptionWithMessage">
+<rect x="3734.3" y="86.5" height="115.0" width="204.0" data-name="ExceptionWithMessage"></rect>
+<path d="M3734.3 117.5 L3938.3 117.5" fill="none" data-name="ExceptionWithMessage"></path>
+<path d="M3734.3 193.5 L3938.3 193.5" fill="none" data-name="ExceptionWithMessage"></path>
+</g>
+<g transform="translate(3734.25, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithMessage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExceptionWithMessage">
+<a id="src/common/Exception.ts.ExceptionWithMessage" xlink:href="src/common/Exception.ts"><text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExceptionWithMessage">ExceptionWithMessage</text></a>
+
+</g>
+</g>
+<g transform="translate(3734.25, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithMessage">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExceptionWithMessage">
+<text x="0.0" y="13.5" stroke="none" data-name="ExceptionWithMessage">+code?: string | number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ExceptionWithMessage">+message: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ExceptionWithMessage">+name?: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ExceptionWithMessage">+stack?: string</text>
+
+</g>
+</g>
+<g transform="translate(3734.25, 193.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithMessage">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ExceptionWithMessage">
+
+</g>
+</g>
+</g>
+<g data-name="ExceptionWithName">
+<g fill="lightblue" stroke="#33322E" data-name="ExceptionWithName">
+<rect x="3978.3" y="86.5" height="115.0" width="204.0" data-name="ExceptionWithName"></rect>
+<path d="M3978.3 117.5 L4182.3 117.5" fill="none" data-name="ExceptionWithName"></path>
+<path d="M3978.3 193.5 L4182.3 193.5" fill="none" data-name="ExceptionWithName"></path>
+</g>
+<g transform="translate(3978.25, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithName">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ExceptionWithName">
+<a id="src/common/Exception.ts.ExceptionWithName" xlink:href="src/common/Exception.ts"><text x="94.0" y="13.5" stroke="none" text-anchor="middle" data-name="ExceptionWithName">ExceptionWithName</text></a>
+
+</g>
+</g>
+<g transform="translate(3978.25, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithName">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ExceptionWithName">
+<text x="0.0" y="13.5" stroke="none" data-name="ExceptionWithName">+code?: string | number</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ExceptionWithName">+message?: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ExceptionWithName">+name: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ExceptionWithName">+stack?: string</text>
+
+</g>
+</g>
+<g transform="translate(3978.25, 193.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ExceptionWithName">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ExceptionWithName">
+
+</g>
+</g>
+</g>
+<g data-name="BaseContext">
+<g fill="#eee8d5" stroke="#33322E" data-name="BaseContext">
+<rect x="4105.8" y="392.0" height="115.0" width="436.0" data-name="BaseContext"></rect>
+<path d="M4105.8 423.0 L4541.8 423.0" fill="none" data-name="BaseContext"></path>
+<path d="M4105.8 499.0 L4541.8 499.0" fill="none" data-name="BaseContext"></path>
+</g>
+<g transform="translate(4105.75, 392)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BaseContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BaseContext">
+<a id="src/context/context.ts.BaseContext" xlink:href="src/context/context.ts"><text x="210.0" y="13.5" stroke="none" text-anchor="middle" data-name="BaseContext">BaseContext</text></a>
+
+</g>
+</g>
+<g transform="translate(4105.75, 423)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaseContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BaseContext">
+<text x="0.0" y="13.5" stroke="none" data-name="BaseContext">+_currentContext: Map&lt;symbol, unknown&gt;</text>
+<text x="0.0" y="28.5" stroke="none" data-name="BaseContext">#getValue: (key: symbol) =&gt; unknown</text>
+<text x="0.0" y="43.5" stroke="none" data-name="BaseContext">#setValue: (key: symbol, value: unknown) =&gt; Context</text>
+<text x="0.0" y="58.5" stroke="none" data-name="BaseContext">#deleteValue: (key: symbol) =&gt; Context</text>
+
+</g>
+</g>
+<g transform="translate(4105.75, 499)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaseContext">
+<g transform="translate(8, 8)" fill="#33322E" data-name="BaseContext">
+
+</g>
+</g>
+</g>
+<g data-name="Context">
+<g fill="lightblue" stroke="#33322E" data-name="Context">
+<rect x="4222.3" y="94.0" height="100.0" width="203.0" data-name="Context"></rect>
+<path d="M4222.3 125.0 L4425.3 125.0" fill="none" data-name="Context"></path>
+<path d="M4222.3 133.0 L4425.3 133.0" fill="none" data-name="Context"></path>
+</g>
+<g transform="translate(4222.25, 94)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Context">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Context">
+<a id="src/context/types.ts.Context" xlink:href="src/context/types.ts"><text x="93.5" y="13.5" stroke="none" text-anchor="middle" data-name="Context">Context</text></a>
+
+</g>
+</g>
+<g transform="translate(4222.25, 125)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Context">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Context">
+
+</g>
+</g>
+<g transform="translate(4222.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Context">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Context">
+<text x="0.0" y="13.5" stroke="none" data-name="Context">+getValue(): unknown</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Context">+setValue(): Context</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Context">+deleteValue(): Context</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopContextManager">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopContextManager">
+<rect x="4581.8" y="384.5" height="130.0" width="201.0" data-name="NoopContextManager"></rect>
+<path d="M4581.8 415.5 L4782.8 415.5" fill="none" data-name="NoopContextManager"></path>
+<path d="M4581.8 423.5 L4782.8 423.5" fill="none" data-name="NoopContextManager"></path>
+</g>
+<g transform="translate(4581.75, 384.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopContextManager">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopContextManager">
+<a id="src/context/NoopContextManager.ts.NoopContextManager" xlink:href="src/context/NoopContextManager.ts"><text x="92.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopContextManager">NoopContextManager</text></a>
+
+</g>
+</g>
+<g transform="translate(4581.75, 415.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopContextManager">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopContextManager">
+
+</g>
+</g>
+<g transform="translate(4581.75, 423.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopContextManager">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopContextManager">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopContextManager">+active(): Context</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopContextManager">+with(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="NoopContextManager">+bind(): T</text>
+<text x="0.0" y="58.5" stroke="none" data-name="NoopContextManager">+enable(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="NoopContextManager">+disable(): this</text>
+
+</g>
+</g>
+</g>
+<g data-name="ContextManager">
+<g fill="lightblue" stroke="#33322E" data-name="ContextManager">
+<rect x="4581.8" y="79.0" height="130.0" width="201.0" data-name="ContextManager"></rect>
+<path d="M4581.8 110.0 L4782.8 110.0" fill="none" data-name="ContextManager"></path>
+<path d="M4581.8 118.0 L4782.8 118.0" fill="none" data-name="ContextManager"></path>
+</g>
+<g transform="translate(4581.75, 79)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContextManager">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ContextManager">
+<a id="src/context/types.ts.ContextManager" xlink:href="src/context/types.ts"><text x="92.5" y="13.5" stroke="none" text-anchor="middle" data-name="ContextManager">ContextManager</text></a>
+
+</g>
+</g>
+<g transform="translate(4581.75, 110)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContextManager">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ContextManager">
+
+</g>
+</g>
+<g transform="translate(4581.75, 118)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ContextManager">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ContextManager">
+<text x="0.0" y="13.5" stroke="none" data-name="ContextManager">+active(): Context</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ContextManager">+with(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ContextManager">+bind(): T</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ContextManager">+enable(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="ContextManager">+disable(): this</text>
+
+</g>
+</g>
+</g>
+<g data-name="DiagComponentLogger">
+<g fill="#eee8d5" stroke="#33322E" data-name="DiagComponentLogger">
+<rect x="891.0" y="373.0" height="153.0" width="199.0" data-name="DiagComponentLogger"></rect>
+<path d="M891.0 404.0 L1090.0 404.0" fill="none" data-name="DiagComponentLogger"></path>
+<path d="M891.0 435.0 L1090.0 435.0" fill="none" data-name="DiagComponentLogger"></path>
+</g>
+<g transform="translate(891, 373)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DiagComponentLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagComponentLogger">
+<a id="src/diag/ComponentLogger.ts.DiagComponentLogger" xlink:href="src/diag/ComponentLogger.ts"><text x="91.5" y="13.5" stroke="none" text-anchor="middle" data-name="DiagComponentLogger">DiagComponentLogger</text></a>
+
+</g>
+</g>
+<g transform="translate(891, 404)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagComponentLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagComponentLogger">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagComponentLogger">+_namespace: string</text>
+
+</g>
+</g>
+<g transform="translate(891, 435)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagComponentLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagComponentLogger">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagComponentLogger">#debug(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagComponentLogger">#error(): void</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DiagComponentLogger">#info(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DiagComponentLogger">#warn(): void</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DiagComponentLogger">#verbose(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="DiagConsoleLogger">
+<g fill="#eee8d5" stroke="#33322E" data-name="DiagConsoleLogger">
+<rect x="1867.0" y="384.5" height="130.0" width="234.0" data-name="DiagConsoleLogger"></rect>
+<path d="M1867.0 415.5 L2101.0 415.5" fill="none" data-name="DiagConsoleLogger"></path>
+<path d="M1867.0 506.5 L2101.0 506.5" fill="none" data-name="DiagConsoleLogger"></path>
+</g>
+<g transform="translate(1867, 384.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="DiagConsoleLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagConsoleLogger">
+<a id="src/diag/consoleLogger.ts.DiagConsoleLogger" xlink:href="src/diag/consoleLogger.ts"><text x="109.0" y="13.5" stroke="none" text-anchor="middle" data-name="DiagConsoleLogger">DiagConsoleLogger</text></a>
+
+</g>
+</g>
+<g transform="translate(1867, 415.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagConsoleLogger">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagConsoleLogger">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagConsoleLogger">#error: DiagLogFunction</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagConsoleLogger">#warn: DiagLogFunction</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DiagConsoleLogger">#info: DiagLogFunction</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DiagConsoleLogger">#debug: DiagLogFunction</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DiagConsoleLogger">#verbose: DiagLogFunction</text>
+
+</g>
+</g>
+<g transform="translate(1867, 506.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagConsoleLogger">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DiagConsoleLogger">
+
+</g>
+</g>
+</g>
+<g data-name="ComponentLoggerOptions">
+<g fill="lightblue" stroke="#33322E" data-name="ComponentLoggerOptions">
+<rect x="4822.8" y="109.0" height="70.0" width="224.0" data-name="ComponentLoggerOptions"></rect>
+<path d="M4822.8 140.0 L5046.8 140.0" fill="none" data-name="ComponentLoggerOptions"></path>
+<path d="M4822.8 171.0 L5046.8 171.0" fill="none" data-name="ComponentLoggerOptions"></path>
+</g>
+<g transform="translate(4822.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ComponentLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ComponentLoggerOptions">
+<a id="src/diag/types.ts.ComponentLoggerOptions" xlink:href="src/diag/types.ts"><text x="104.0" y="13.5" stroke="none" text-anchor="middle" data-name="ComponentLoggerOptions">ComponentLoggerOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(4822.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ComponentLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ComponentLoggerOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="ComponentLoggerOptions">+namespace: string</text>
+
+</g>
+</g>
+<g transform="translate(4822.75, 171)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ComponentLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ComponentLoggerOptions">
+
+</g>
+</g>
+</g>
+<g data-name="DiagLoggerOptions">
+<g fill="lightblue" stroke="#33322E" data-name="DiagLoggerOptions">
+<rect x="5086.8" y="101.5" height="85.0" width="323.0" data-name="DiagLoggerOptions"></rect>
+<path d="M5086.8 132.5 L5409.8 132.5" fill="none" data-name="DiagLoggerOptions"></path>
+<path d="M5086.8 178.5 L5409.8 178.5" fill="none" data-name="DiagLoggerOptions"></path>
+</g>
+<g transform="translate(5086.75, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagLoggerOptions">
+<a id="src/diag/types.ts.DiagLoggerOptions" xlink:href="src/diag/types.ts"><text x="153.5" y="13.5" stroke="none" text-anchor="middle" data-name="DiagLoggerOptions">DiagLoggerOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(5086.75, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagLoggerOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagLoggerOptions">+logLevel?: DiagLogLevel</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagLoggerOptions">+suppressOverrideMessage?: boolean</text>
+
+</g>
+</g>
+<g transform="translate(5086.75, 178.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLoggerOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="DiagLoggerOptions">
+
+</g>
+</g>
+</g>
+<g data-name="DiagLogLevel">
+<g fill="lightgreen" stroke="#33322E" data-name="DiagLogLevel">
+<rect x="5449.8" y="68.0" height="152.0" width="125.0" data-name="DiagLogLevel"></rect>
+<path d="M5449.8 99.0 L5574.8 99.0" fill="none" data-name="DiagLogLevel"></path>
+</g>
+<g transform="translate(5449.75, 68)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLogLevel">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="DiagLogLevel">
+<a id="src/diag/types.ts.DiagLogLevel" xlink:href="src/diag/types.ts"><text x="54.5" y="13.5" stroke="none" text-anchor="middle" data-name="DiagLogLevel">DiagLogLevel</text></a>
+
+</g>
+</g>
+<g transform="translate(5449.75, 99)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="DiagLogLevel">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="DiagLogLevel">
+<text x="0.0" y="13.5" stroke="none" data-name="DiagLogLevel">NONE</text>
+<text x="0.0" y="28.5" stroke="none" data-name="DiagLogLevel">ERROR</text>
+<text x="0.0" y="43.5" stroke="none" data-name="DiagLogLevel">WARN</text>
+<text x="0.0" y="58.5" stroke="none" data-name="DiagLogLevel">INFO</text>
+<text x="0.0" y="73.5" stroke="none" data-name="DiagLogLevel">DEBUG</text>
+<text x="0.0" y="88.5" stroke="none" data-name="DiagLogLevel">VERBOSE</text>
+<text x="0.0" y="103.5" stroke="none" data-name="DiagLogLevel">ALL</text>
+
+</g>
+</g>
+</g>
+<g data-name="OTelGlobal">
+<g fill="lightgray" stroke="#33322E" data-name="OTelGlobal">
+<rect x="5614.8" y="109.0" height="70.0" width="259.0" data-name="OTelGlobal"></rect>
+<path d="M5614.8 140.0 L5873.8 140.0" fill="none" data-name="OTelGlobal"></path>
+<path d="M5614.8 171.0 L5873.8 171.0" fill="none" data-name="OTelGlobal"></path>
+</g>
+<g transform="translate(5614.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobal">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="OTelGlobal">
+<a id="src/internal/global-utils.ts.OTelGlobal" xlink:href="src/internal/global-utils.ts"><text x="121.5" y="13.5" stroke="none" text-anchor="middle" data-name="OTelGlobal">OTelGlobal</text></a>
+
+</g>
+</g>
+<g transform="translate(5614.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobal">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="OTelGlobal">
+<text x="0.0" y="13.5" stroke="none" data-name="OTelGlobal">+__computed?: OTelGlobalAPI</text>
+
+</g>
+</g>
+<g transform="translate(5614.75, 171)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobal">
+<g transform="translate(8, 8)" fill="#33322E" data-name="OTelGlobal">
+
+</g>
+</g>
+</g>
+<g data-name="OTelGlobalAPI">
+<g fill="lightgray" stroke="#33322E" data-name="OTelGlobalAPI">
+<rect x="5913.8" y="71.5" height="145.0" width="346.0" data-name="OTelGlobalAPI"></rect>
+<path d="M5913.8 102.5 L6259.8 102.5" fill="none" data-name="OTelGlobalAPI"></path>
+<path d="M5913.8 208.5 L6259.8 208.5" fill="none" data-name="OTelGlobalAPI"></path>
+</g>
+<g transform="translate(5913.75, 71.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobalAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="OTelGlobalAPI">
+<a id="src/internal/global-utils.ts.OTelGlobalAPI" xlink:href="src/internal/global-utils.ts"><text x="165.0" y="13.5" stroke="none" text-anchor="middle" data-name="OTelGlobalAPI">OTelGlobalAPI</text></a>
+
+</g>
+</g>
+<g transform="translate(5913.75, 102.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobalAPI">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="OTelGlobalAPI">
+<text x="0.0" y="13.5" stroke="none" data-name="OTelGlobalAPI">+version: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="OTelGlobalAPI">+diag?: DiagLogger</text>
+<text x="0.0" y="43.5" stroke="none" data-name="OTelGlobalAPI">+trace?: TracerProvider</text>
+<text x="0.0" y="58.5" stroke="none" data-name="OTelGlobalAPI">+context?: ContextManager</text>
+<text x="0.0" y="73.5" stroke="none" data-name="OTelGlobalAPI">+metrics?: MeterProvider</text>
+<text x="0.0" y="88.5" stroke="none" data-name="OTelGlobalAPI">+propagation?: TextMapPropagator&lt;any&gt;</text>
+
+</g>
+</g>
+<g transform="translate(5913.75, 208.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="OTelGlobalAPI">
+<g transform="translate(8, 8)" fill="#33322E" data-name="OTelGlobalAPI">
+
+</g>
+</g>
+</g>
+<g data-name="MeterOptions">
+<g fill="lightblue" stroke="#33322E" data-name="MeterOptions">
+<rect x="6299.8" y="109.0" height="70.0" width="174.0" data-name="MeterOptions"></rect>
+<path d="M6299.8 140.0 L6473.8 140.0" fill="none" data-name="MeterOptions"></path>
+<path d="M6299.8 171.0 L6473.8 171.0" fill="none" data-name="MeterOptions"></path>
+</g>
+<g transform="translate(6299.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeterOptions">
+<a id="src/metrics/Meter.ts.MeterOptions" xlink:href="src/metrics/Meter.ts"><text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="MeterOptions">MeterOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(6299.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeterOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="MeterOptions">+schemaUrl?: string</text>
+
+</g>
+</g>
+<g transform="translate(6299.75, 171)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="MeterOptions">
+
+</g>
+</g>
+</g>
+<g data-name="Meter">
+<g fill="lightblue" stroke="#33322E" data-name="Meter">
+<rect x="6513.8" y="56.5" height="175.0" width="681.0" data-name="Meter"></rect>
+<path d="M6513.8 87.5 L7194.8 87.5" fill="none" data-name="Meter"></path>
+<path d="M6513.8 95.5 L7194.8 95.5" fill="none" data-name="Meter"></path>
+</g>
+<g transform="translate(6513.75, 56.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Meter">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Meter">
+<a id="src/metrics/Meter.ts.Meter" xlink:href="src/metrics/Meter.ts"><text x="332.5" y="13.5" stroke="none" text-anchor="middle" data-name="Meter">Meter</text></a>
+
+</g>
+</g>
+<g transform="translate(6513.75, 87.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Meter">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Meter">
+
+</g>
+</g>
+<g transform="translate(6513.75, 95.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Meter">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Meter">
+<text x="0.0" y="13.5" stroke="none" data-name="Meter">+createHistogram(): Histogram&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Meter">+createCounter(): Counter&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Meter">+createUpDownCounter(): UpDownCounter&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Meter">+createObservableGauge(): ObservableGauge&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Meter">+createObservableCounter(): ObservableCounter&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Meter">+createObservableUpDownCounter(): ObservableUpDownCounter&lt;AttributesTypes&gt;</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Meter">+addBatchObservableCallback(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Meter">+removeBatchObservableCallback(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="MeterProvider">
+<g fill="lightblue" stroke="#33322E" data-name="MeterProvider">
+<rect x="7234.8" y="109.0" height="70.0" width="163.0" data-name="MeterProvider"></rect>
+<path d="M7234.8 140.0 L7397.8 140.0" fill="none" data-name="MeterProvider"></path>
+<path d="M7234.8 148.0 L7397.8 148.0" fill="none" data-name="MeterProvider"></path>
+</g>
+<g transform="translate(7234.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MeterProvider">
+<a id="src/metrics/MeterProvider.ts.MeterProvider" xlink:href="src/metrics/MeterProvider.ts"><text x="73.5" y="13.5" stroke="none" text-anchor="middle" data-name="MeterProvider">MeterProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(7234.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="MeterProvider">
+
+</g>
+</g>
+<g transform="translate(7234.75, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MeterProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="MeterProvider">+getMeter(): Meter</text>
+
+</g>
+</g>
+</g>
+<g data-name="MetricAdvice">
+<g fill="lightblue" stroke="#33322E" data-name="MetricAdvice">
+<rect x="7437.8" y="109.0" height="70.0" width="315.0" data-name="MetricAdvice"></rect>
+<path d="M7437.8 140.0 L7752.8 140.0" fill="none" data-name="MetricAdvice"></path>
+<path d="M7437.8 171.0 L7752.8 171.0" fill="none" data-name="MetricAdvice"></path>
+</g>
+<g transform="translate(7437.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricAdvice">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MetricAdvice">
+<a id="src/metrics/Metric.ts.MetricAdvice" xlink:href="src/metrics/Metric.ts"><text x="149.5" y="13.5" stroke="none" text-anchor="middle" data-name="MetricAdvice">MetricAdvice</text></a>
+
+</g>
+</g>
+<g transform="translate(7437.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricAdvice">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MetricAdvice">
+<text x="0.0" y="13.5" stroke="none" data-name="MetricAdvice">+explicitBucketBoundaries?: number[]</text>
+
+</g>
+</g>
+<g transform="translate(7437.75, 171)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricAdvice">
+<g transform="translate(8, 8)" fill="#33322E" data-name="MetricAdvice">
+
+</g>
+</g>
+</g>
+<g data-name="MetricOptions">
+<g fill="lightblue" stroke="#33322E" data-name="MetricOptions">
+<rect x="7792.8" y="86.5" height="115.0" width="212.0" data-name="MetricOptions"></rect>
+<path d="M7792.8 117.5 L8004.8 117.5" fill="none" data-name="MetricOptions"></path>
+<path d="M7792.8 193.5 L8004.8 193.5" fill="none" data-name="MetricOptions"></path>
+</g>
+<g transform="translate(7792.75, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="MetricOptions">
+<a id="src/metrics/Metric.ts.MetricOptions" xlink:href="src/metrics/Metric.ts"><text x="98.0" y="13.5" stroke="none" text-anchor="middle" data-name="MetricOptions">MetricOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(7792.75, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="MetricOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="MetricOptions">+description?: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="MetricOptions">+unit?: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="MetricOptions">+valueType?: ValueType</text>
+<text x="0.0" y="58.5" stroke="none" data-name="MetricOptions">+advice?: MetricAdvice</text>
+
+</g>
+</g>
+<g transform="translate(7792.75, 193.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="MetricOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="MetricOptions">
+
+</g>
+</g>
+</g>
+<g data-name="Counter&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Counter&lt;AttributesTypes&gt;">
+<rect x="8044.8" y="109.0" height="70.0" width="222.0" data-name="Counter&lt;AttributesTypes&gt;"></rect>
+<path d="M8044.8 140.0 L8266.8 140.0" fill="none" data-name="Counter&lt;AttributesTypes&gt;"></path>
+<path d="M8044.8 148.0 L8266.8 148.0" fill="none" data-name="Counter&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(8044.75, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Counter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Counter&lt;AttributesTypes&gt;">
+<a id="src/metrics/Metric.ts.Counter&lt;AttributesTypes&gt;" xlink:href="src/metrics/Metric.ts"><text x="103.0" y="13.5" stroke="none" text-anchor="middle" data-name="Counter&lt;AttributesTypes&gt;">Counter&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(8044.75, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Counter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Counter&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(8044.75, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Counter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Counter&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="Counter&lt;AttributesTypes&gt;">+add(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<rect x="8499.5" y="109.0" height="70.0" width="288.0" data-name="UpDownCounter&lt;AttributesTypes&gt;"></rect>
+<path d="M8499.5 140.0 L8787.5 140.0" fill="none" data-name="UpDownCounter&lt;AttributesTypes&gt;"></path>
+<path d="M8499.5 148.0 L8787.5 148.0" fill="none" data-name="UpDownCounter&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(8499.5, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<a id="src/metrics/Metric.ts.UpDownCounter&lt;AttributesTypes&gt;" xlink:href="src/metrics/Metric.ts"><text x="136.0" y="13.5" stroke="none" text-anchor="middle" data-name="UpDownCounter&lt;AttributesTypes&gt;">UpDownCounter&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(8499.5, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(8499.5, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="UpDownCounter&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="UpDownCounter&lt;AttributesTypes&gt;">+add(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="Histogram&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Histogram&lt;AttributesTypes&gt;">
+<rect x="8827.5" y="109.0" height="70.0" width="239.0" data-name="Histogram&lt;AttributesTypes&gt;"></rect>
+<path d="M8827.5 140.0 L9066.5 140.0" fill="none" data-name="Histogram&lt;AttributesTypes&gt;"></path>
+<path d="M8827.5 148.0 L9066.5 148.0" fill="none" data-name="Histogram&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(8827.5, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Histogram&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Histogram&lt;AttributesTypes&gt;">
+<a id="src/metrics/Metric.ts.Histogram&lt;AttributesTypes&gt;" xlink:href="src/metrics/Metric.ts"><text x="111.5" y="13.5" stroke="none" text-anchor="middle" data-name="Histogram&lt;AttributesTypes&gt;">Histogram&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(8827.5, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Histogram&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Histogram&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(8827.5, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Histogram&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Histogram&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="Histogram&lt;AttributesTypes&gt;">+record(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="Observable&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="Observable&lt;AttributesTypes&gt;">
+<rect x="9734.3" y="101.5" height="85.0" width="250.0" data-name="Observable&lt;AttributesTypes&gt;"></rect>
+<path d="M9734.3 132.5 L9984.3 132.5" fill="none" data-name="Observable&lt;AttributesTypes&gt;"></path>
+<path d="M9734.3 140.5 L9984.3 140.5" fill="none" data-name="Observable&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(9734.25, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Observable&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Observable&lt;AttributesTypes&gt;">
+<a id="src/metrics/Metric.ts.Observable&lt;AttributesTypes&gt;" xlink:href="src/metrics/Metric.ts"><text x="117.0" y="13.5" stroke="none" text-anchor="middle" data-name="Observable&lt;AttributesTypes&gt;">Observable&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(9734.25, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Observable&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Observable&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(9734.25, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Observable&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Observable&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="Observable&lt;AttributesTypes&gt;">+addCallback(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Observable&lt;AttributesTypes&gt;">+removeCallback(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="ValueType">
+<g fill="lightgreen" stroke="#33322E" data-name="ValueType">
+<rect x="9106.5" y="105.5" height="77.0" width="100.0" data-name="ValueType"></rect>
+<path d="M9106.5 136.5 L9206.5 136.5" fill="none" data-name="ValueType"></path>
+</g>
+<g transform="translate(9106.5, 105.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueType">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ValueType">
+<a id="src/metrics/Metric.ts.ValueType" xlink:href="src/metrics/Metric.ts"><text x="42.0" y="13.5" stroke="none" text-anchor="middle" data-name="ValueType">ValueType</text></a>
+
+</g>
+</g>
+<g transform="translate(9106.5, 136.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ValueType">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ValueType">
+<text x="0.0" y="13.5" stroke="none" data-name="ValueType">INT</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ValueType">DOUBLE</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopMeter">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopMeter">
+<rect x="6585.3" y="362.0" height="175.0" width="538.0" data-name="NoopMeter"></rect>
+<path d="M6585.3 393.0 L7123.3 393.0" fill="none" data-name="NoopMeter"></path>
+<path d="M6585.3 401.0 L7123.3 401.0" fill="none" data-name="NoopMeter"></path>
+</g>
+<g transform="translate(6585.25, 362)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopMeter">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopMeter">
+<a id="src/metrics/NoopMeter.ts.NoopMeter" xlink:href="src/metrics/NoopMeter.ts"><text x="261.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopMeter">NoopMeter</text></a>
+
+</g>
+</g>
+<g transform="translate(6585.25, 393)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMeter">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopMeter">
+
+</g>
+</g>
+<g transform="translate(6585.25, 401)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMeter">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopMeter">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopMeter">+createHistogram(): Histogram&lt;Attributes&gt;</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopMeter">+createCounter(): Counter&lt;Attributes&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="NoopMeter">+createUpDownCounter(): UpDownCounter&lt;Attributes&gt;</text>
+<text x="0.0" y="58.5" stroke="none" data-name="NoopMeter">+createObservableGauge(): ObservableGauge</text>
+<text x="0.0" y="73.5" stroke="none" data-name="NoopMeter">+createObservableCounter(): ObservableCounter</text>
+<text x="0.0" y="88.5" stroke="none" data-name="NoopMeter">+createObservableUpDownCounter(): ObservableUpDownCounter</text>
+<text x="0.0" y="103.5" stroke="none" data-name="NoopMeter">+addBatchObservableCallback(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="NoopMeter">+removeBatchObservableCallback(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopMetric">
+<rect x="8306.8" y="120.5" height="47.0" width="106.0" data-name="NoopMetric"></rect>
+<path d="M8306.8 151.5 L8412.8 151.5" fill="none" data-name="NoopMetric"></path>
+<path d="M8306.8 159.5 L8412.8 159.5" fill="none" data-name="NoopMetric"></path>
+</g>
+<g transform="translate(8306.75, 120.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopMetric">
+<a id="src/metrics/NoopMeter.ts.NoopMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="45.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopMetric">NoopMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(8306.75, 151.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopMetric">
+
+</g>
+</g>
+<g transform="translate(8306.75, 159.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopMetric">
+
+</g>
+</g>
+</g>
+<g data-name="NoopCounterMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopCounterMetric">
+<rect x="8091.3" y="414.5" height="70.0" width="169.0" data-name="NoopCounterMetric"></rect>
+<path d="M8091.3 445.5 L8260.3 445.5" fill="none" data-name="NoopCounterMetric"></path>
+<path d="M8091.3 453.5 L8260.3 453.5" fill="none" data-name="NoopCounterMetric"></path>
+</g>
+<g transform="translate(8091.25, 414.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopCounterMetric">
+<a id="src/metrics/NoopMeter.ts.NoopCounterMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopCounterMetric">NoopCounterMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(8091.25, 445.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopCounterMetric">
+
+</g>
+</g>
+<g transform="translate(8091.25, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopCounterMetric">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopCounterMetric">+add(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopUpDownCounterMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopUpDownCounterMetric">
+<rect x="8367.8" y="414.5" height="70.0" width="235.0" data-name="NoopUpDownCounterMetric"></rect>
+<path d="M8367.8 445.5 L8602.8 445.5" fill="none" data-name="NoopUpDownCounterMetric"></path>
+<path d="M8367.8 453.5 L8602.8 453.5" fill="none" data-name="NoopUpDownCounterMetric"></path>
+</g>
+<g transform="translate(8367.75, 414.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopUpDownCounterMetric">
+<a id="src/metrics/NoopMeter.ts.NoopUpDownCounterMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="109.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopUpDownCounterMetric">NoopUpDownCounterMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(8367.75, 445.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopUpDownCounterMetric">
+
+</g>
+</g>
+<g transform="translate(8367.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopUpDownCounterMetric">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopUpDownCounterMetric">+add(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopHistogramMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopHistogramMetric">
+<rect x="8655.5" y="414.5" height="70.0" width="186.0" data-name="NoopHistogramMetric"></rect>
+<path d="M8655.5 445.5 L8841.5 445.5" fill="none" data-name="NoopHistogramMetric"></path>
+<path d="M8655.5 453.5 L8841.5 453.5" fill="none" data-name="NoopHistogramMetric"></path>
+</g>
+<g transform="translate(8655.5, 414.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopHistogramMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopHistogramMetric">
+<a id="src/metrics/NoopMeter.ts.NoopHistogramMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="85.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopHistogramMetric">NoopHistogramMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(8655.5, 445.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopHistogramMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopHistogramMetric">
+
+</g>
+</g>
+<g transform="translate(8655.5, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopHistogramMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopHistogramMetric">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopHistogramMetric">+record(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopObservableMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopObservableMetric">
+<rect x="9246.5" y="101.5" height="85.0" width="208.0" data-name="NoopObservableMetric"></rect>
+<path d="M9246.5 132.5 L9454.5 132.5" fill="none" data-name="NoopObservableMetric"></path>
+<path d="M9246.5 140.5 L9454.5 140.5" fill="none" data-name="NoopObservableMetric"></path>
+</g>
+<g transform="translate(9246.5, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopObservableMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopObservableMetric">
+<a id="src/metrics/NoopMeter.ts.NoopObservableMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopObservableMetric">NoopObservableMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(9246.5, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableMetric">
+
+</g>
+</g>
+<g transform="translate(9246.5, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopObservableMetric">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopObservableMetric">+addCallback(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopObservableMetric">+removeCallback(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopObservableCounterMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopObservableCounterMetric">
+<rect x="9205.3" y="426.0" height="47.0" width="260.0" data-name="NoopObservableCounterMetric"></rect>
+<path d="M9205.3 457.0 L9465.3 457.0" fill="none" data-name="NoopObservableCounterMetric"></path>
+<path d="M9205.3 465.0 L9465.3 465.0" fill="none" data-name="NoopObservableCounterMetric"></path>
+</g>
+<g transform="translate(9205.25, 426)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopObservableCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopObservableCounterMetric">
+<a id="src/metrics/NoopMeter.ts.NoopObservableCounterMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="122.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopObservableCounterMetric">NoopObservableCounterMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(9205.25, 457)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableCounterMetric">
+
+</g>
+</g>
+<g transform="translate(9205.25, 465)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableCounterMetric">
+
+</g>
+</g>
+</g>
+<g data-name="NoopObservableGaugeMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopObservableGaugeMetric">
+<rect x="9505.3" y="426.0" height="47.0" width="250.0" data-name="NoopObservableGaugeMetric"></rect>
+<path d="M9505.3 457.0 L9755.3 457.0" fill="none" data-name="NoopObservableGaugeMetric"></path>
+<path d="M9505.3 465.0 L9755.3 465.0" fill="none" data-name="NoopObservableGaugeMetric"></path>
+</g>
+<g transform="translate(9505.25, 426)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopObservableGaugeMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopObservableGaugeMetric">
+<a id="src/metrics/NoopMeter.ts.NoopObservableGaugeMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="117.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopObservableGaugeMetric">NoopObservableGaugeMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(9505.25, 457)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableGaugeMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableGaugeMetric">
+
+</g>
+</g>
+<g transform="translate(9505.25, 465)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableGaugeMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableGaugeMetric">
+
+</g>
+</g>
+</g>
+<g data-name="NoopObservableUpDownCounterMetric">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopObservableUpDownCounterMetric">
+<rect x="9795.3" y="426.0" height="47.0" width="326.0" data-name="NoopObservableUpDownCounterMetric"></rect>
+<path d="M9795.3 457.0 L10121.3 457.0" fill="none" data-name="NoopObservableUpDownCounterMetric"></path>
+<path d="M9795.3 465.0 L10121.3 465.0" fill="none" data-name="NoopObservableUpDownCounterMetric"></path>
+</g>
+<g transform="translate(9795.25, 426)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopObservableUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopObservableUpDownCounterMetric">
+<a id="src/metrics/NoopMeter.ts.NoopObservableUpDownCounterMetric" xlink:href="src/metrics/NoopMeter.ts"><text x="155.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopObservableUpDownCounterMetric">NoopObservableUpDownCounterMetric</text></a>
+
+</g>
+</g>
+<g transform="translate(9795.25, 457)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableUpDownCounterMetric">
+
+</g>
+</g>
+<g transform="translate(9795.25, 465)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopObservableUpDownCounterMetric">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopObservableUpDownCounterMetric">
+
+</g>
+</g>
+</g>
+<g data-name="NoopMeterProvider">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopMeterProvider">
+<rect x="7231.8" y="414.5" height="70.0" width="169.0" data-name="NoopMeterProvider"></rect>
+<path d="M7231.8 445.5 L7400.8 445.5" fill="none" data-name="NoopMeterProvider"></path>
+<path d="M7231.8 453.5 L7400.8 453.5" fill="none" data-name="NoopMeterProvider"></path>
+</g>
+<g transform="translate(7231.75, 414.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopMeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopMeterProvider">
+<a id="src/metrics/NoopMeterProvider.ts.NoopMeterProvider" xlink:href="src/metrics/NoopMeterProvider.ts"><text x="76.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopMeterProvider">NoopMeterProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(7231.75, 445.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopMeterProvider">
+
+</g>
+</g>
+<g transform="translate(7231.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopMeterProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopMeterProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopMeterProvider">+getMeter(): Meter</text>
+
+</g>
+</g>
+</g>
+<g data-name="ObservableResult&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<rect x="10024.3" y="109.0" height="70.0" width="300.0" data-name="ObservableResult&lt;AttributesTypes&gt;"></rect>
+<path d="M10024.3 140.0 L10324.3 140.0" fill="none" data-name="ObservableResult&lt;AttributesTypes&gt;"></path>
+<path d="M10024.3 148.0 L10324.3 148.0" fill="none" data-name="ObservableResult&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(10024.25, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<a id="src/metrics/ObservableResult.ts.ObservableResult&lt;AttributesTypes&gt;" xlink:href="src/metrics/ObservableResult.ts"><text x="142.0" y="13.5" stroke="none" text-anchor="middle" data-name="ObservableResult&lt;AttributesTypes&gt;">ObservableResult&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(10024.25, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="ObservableResult&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(10024.25, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ObservableResult&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="ObservableResult&lt;AttributesTypes&gt;">+observe(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<rect x="10364.3" y="109.0" height="70.0" width="345.0" data-name="BatchObservableResult&lt;AttributesTypes&gt;"></rect>
+<path d="M10364.3 140.0 L10709.3 140.0" fill="none" data-name="BatchObservableResult&lt;AttributesTypes&gt;"></path>
+<path d="M10364.3 148.0 L10709.3 148.0" fill="none" data-name="BatchObservableResult&lt;AttributesTypes&gt;"></path>
+</g>
+<g transform="translate(10364.25, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<a id="src/metrics/ObservableResult.ts.BatchObservableResult&lt;AttributesTypes&gt;" xlink:href="src/metrics/ObservableResult.ts"><text x="164.5" y="13.5" stroke="none" text-anchor="middle" data-name="BatchObservableResult&lt;AttributesTypes&gt;">BatchObservableResult&lt;AttributesTypes&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(10364.25, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+
+</g>
+</g>
+<g transform="translate(10364.25, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BatchObservableResult&lt;AttributesTypes&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="BatchObservableResult&lt;AttributesTypes&gt;">+observe(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopTextMapPropagator">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopTextMapPropagator">
+<rect x="10765.3" y="399.5" height="100.0" width="214.0" data-name="NoopTextMapPropagator"></rect>
+<path d="M10765.3 430.5 L10979.3 430.5" fill="none" data-name="NoopTextMapPropagator"></path>
+<path d="M10765.3 438.5 L10979.3 438.5" fill="none" data-name="NoopTextMapPropagator"></path>
+</g>
+<g transform="translate(10765.25, 399.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopTextMapPropagator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopTextMapPropagator">
+<a id="src/propagation/NoopTextMapPropagator.ts.NoopTextMapPropagator" xlink:href="src/propagation/NoopTextMapPropagator.ts"><text x="99.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopTextMapPropagator">NoopTextMapPropagator</text></a>
+
+</g>
+</g>
+<g transform="translate(10765.25, 430.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTextMapPropagator">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopTextMapPropagator">
+
+</g>
+</g>
+<g transform="translate(10765.25, 438.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTextMapPropagator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopTextMapPropagator">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopTextMapPropagator">+inject(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopTextMapPropagator">+extract(): Context</text>
+<text x="0.0" y="43.5" stroke="none" data-name="NoopTextMapPropagator">+fields(): string[]</text>
+
+</g>
+</g>
+</g>
+<g data-name="TextMapPropagator&lt;Carrier&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="TextMapPropagator&lt;Carrier&gt;">
+<rect x="10749.3" y="94.0" height="100.0" width="246.0" data-name="TextMapPropagator&lt;Carrier&gt;"></rect>
+<path d="M10749.3 125.0 L10995.3 125.0" fill="none" data-name="TextMapPropagator&lt;Carrier&gt;"></path>
+<path d="M10749.3 133.0 L10995.3 133.0" fill="none" data-name="TextMapPropagator&lt;Carrier&gt;"></path>
+</g>
+<g transform="translate(10749.25, 94)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapPropagator&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextMapPropagator&lt;Carrier&gt;">
+<a id="src/propagation/TextMapPropagator.ts.TextMapPropagator&lt;Carrier&gt;" xlink:href="src/propagation/TextMapPropagator.ts"><text x="115.0" y="13.5" stroke="none" text-anchor="middle" data-name="TextMapPropagator&lt;Carrier&gt;">TextMapPropagator&lt;Carrier&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(10749.25, 125)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapPropagator&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TextMapPropagator&lt;Carrier&gt;">
+
+</g>
+</g>
+<g transform="translate(10749.25, 133)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapPropagator&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TextMapPropagator&lt;Carrier&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="TextMapPropagator&lt;Carrier&gt;">+inject(): void</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TextMapPropagator&lt;Carrier&gt;">+extract(): Context</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TextMapPropagator&lt;Carrier&gt;">+fields(): string[]</text>
+
+</g>
+</g>
+</g>
+<g data-name="TextMapSetter&lt;Carrier&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="TextMapSetter&lt;Carrier&gt;">
+<rect x="11035.3" y="109.0" height="70.0" width="205.0" data-name="TextMapSetter&lt;Carrier&gt;"></rect>
+<path d="M11035.3 140.0 L11240.3 140.0" fill="none" data-name="TextMapSetter&lt;Carrier&gt;"></path>
+<path d="M11035.3 148.0 L11240.3 148.0" fill="none" data-name="TextMapSetter&lt;Carrier&gt;"></path>
+</g>
+<g transform="translate(11035.25, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapSetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextMapSetter&lt;Carrier&gt;">
+<a id="src/propagation/TextMapPropagator.ts.TextMapSetter&lt;Carrier&gt;" xlink:href="src/propagation/TextMapPropagator.ts"><text x="94.5" y="13.5" stroke="none" text-anchor="middle" data-name="TextMapSetter&lt;Carrier&gt;">TextMapSetter&lt;Carrier&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(11035.25, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapSetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TextMapSetter&lt;Carrier&gt;">
+
+</g>
+</g>
+<g transform="translate(11035.25, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapSetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TextMapSetter&lt;Carrier&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="TextMapSetter&lt;Carrier&gt;">+set(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="TextMapGetter&lt;Carrier&gt;">
+<g fill="lightblue" stroke="#33322E" data-name="TextMapGetter&lt;Carrier&gt;">
+<rect x="11280.3" y="101.5" height="85.0" width="280.0" data-name="TextMapGetter&lt;Carrier&gt;"></rect>
+<path d="M11280.3 132.5 L11560.3 132.5" fill="none" data-name="TextMapGetter&lt;Carrier&gt;"></path>
+<path d="M11280.3 140.5 L11560.3 140.5" fill="none" data-name="TextMapGetter&lt;Carrier&gt;"></path>
+</g>
+<g transform="translate(11280.25, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapGetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TextMapGetter&lt;Carrier&gt;">
+<a id="src/propagation/TextMapPropagator.ts.TextMapGetter&lt;Carrier&gt;" xlink:href="src/propagation/TextMapPropagator.ts"><text x="132.0" y="13.5" stroke="none" text-anchor="middle" data-name="TextMapGetter&lt;Carrier&gt;">TextMapGetter&lt;Carrier&gt;</text></a>
+
+</g>
+</g>
+<g transform="translate(11280.25, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapGetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TextMapGetter&lt;Carrier&gt;">
+
+</g>
+</g>
+<g transform="translate(11280.25, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TextMapGetter&lt;Carrier&gt;">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TextMapGetter&lt;Carrier&gt;">
+<text x="0.0" y="13.5" stroke="none" data-name="TextMapGetter&lt;Carrier&gt;">+keys(): string[]</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TextMapGetter&lt;Carrier&gt;">+get(): string | string[] | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="Link">
+<g fill="lightblue" stroke="#33322E" data-name="Link">
+<rect x="11600.3" y="94.0" height="100.0" width="294.0" data-name="Link"></rect>
+<path d="M11600.3 125.0 L11894.3 125.0" fill="none" data-name="Link"></path>
+<path d="M11600.3 186.0 L11894.3 186.0" fill="none" data-name="Link"></path>
+</g>
+<g transform="translate(11600.25, 94)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Link">
+<a id="src/trace/link.ts.Link" xlink:href="src/trace/link.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="Link">Link</text></a>
+
+</g>
+</g>
+<g transform="translate(11600.25, 125)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Link">
+<text x="0.0" y="13.5" stroke="none" data-name="Link">+context: SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Link">+attributes?: Attributes</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Link">+droppedAttributesCount?: number</text>
+
+</g>
+</g>
+<g transform="translate(11600.25, 186)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Link">
+
+</g>
+</g>
+</g>
+<g data-name="NonRecordingSpan">
+<g fill="#eee8d5" stroke="#33322E" data-name="NonRecordingSpan">
+<rect x="11900.8" y="343.0" height="213.0" width="317.0" data-name="NonRecordingSpan"></rect>
+<path d="M11900.8 374.0 L12217.8 374.0" fill="none" data-name="NonRecordingSpan"></path>
+<path d="M11900.8 405.0 L12217.8 405.0" fill="none" data-name="NonRecordingSpan"></path>
+</g>
+<g transform="translate(11900.75, 343)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NonRecordingSpan">
+<a id="src/trace/NonRecordingSpan.ts.NonRecordingSpan" xlink:href="src/trace/NonRecordingSpan.ts"><text x="150.5" y="13.5" stroke="none" text-anchor="middle" data-name="NonRecordingSpan">NonRecordingSpan</text></a>
+
+</g>
+</g>
+<g transform="translate(11900.75, 374)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NonRecordingSpan">
+<text x="0.0" y="13.5" stroke="none" data-name="NonRecordingSpan">+abstract _spanContext: SpanContext</text>
+
+</g>
+</g>
+<g transform="translate(11900.75, 405)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NonRecordingSpan">
+<text x="0.0" y="13.5" stroke="none" data-name="NonRecordingSpan">+spanContext(): SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NonRecordingSpan">+setAttribute(): this</text>
+<text x="0.0" y="43.5" stroke="none" data-name="NonRecordingSpan">+setAttributes(): this</text>
+<text x="0.0" y="58.5" stroke="none" data-name="NonRecordingSpan">+addEvent(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="NonRecordingSpan">+setStatus(): this</text>
+<text x="0.0" y="88.5" stroke="none" data-name="NonRecordingSpan">+updateName(): this</text>
+<text x="0.0" y="103.5" stroke="none" data-name="NonRecordingSpan">+end(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="NonRecordingSpan">+isRecording(): boolean</text>
+<text x="0.0" y="133.5" stroke="none" data-name="NonRecordingSpan">+recordException(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="Span">
+<g fill="lightblue" stroke="#33322E" data-name="Span">
+<rect x="11934.3" y="49.0" height="190.0" width="250.0" data-name="Span"></rect>
+<path d="M11934.3 80.0 L12184.3 80.0" fill="none" data-name="Span"></path>
+<path d="M11934.3 88.0 L12184.3 88.0" fill="none" data-name="Span"></path>
+</g>
+<g transform="translate(11934.25, 49)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Span">
+<a id="src/trace/span.ts.Span" xlink:href="src/trace/span.ts"><text x="117.0" y="13.5" stroke="none" text-anchor="middle" data-name="Span">Span</text></a>
+
+</g>
+</g>
+<g transform="translate(11934.25, 80)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Span">
+
+</g>
+</g>
+<g transform="translate(11934.25, 88)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Span">
+<text x="0.0" y="13.5" stroke="none" data-name="Span">+spanContext(): SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Span">+setAttribute(): this</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Span">+setAttributes(): this</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Span">+addEvent(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Span">+setStatus(): this</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Span">+updateName(): this</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Span">+end(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Span">+isRecording(): boolean</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Span">+recordException(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopTracer">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopTracer">
+<rect x="12257.8" y="407.0" height="85.0" width="388.0" data-name="NoopTracer"></rect>
+<path d="M12257.8 438.0 L12645.8 438.0" fill="none" data-name="NoopTracer"></path>
+<path d="M12257.8 446.0 L12645.8 446.0" fill="none" data-name="NoopTracer"></path>
+</g>
+<g transform="translate(12257.75, 407)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopTracer">
+<a id="src/trace/NoopTracer.ts.NoopTracer" xlink:href="src/trace/NoopTracer.ts"><text x="186.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopTracer">NoopTracer</text></a>
+
+</g>
+</g>
+<g transform="translate(12257.75, 438)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopTracer">
+
+</g>
+</g>
+<g transform="translate(12257.75, 446)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopTracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopTracer">+startActiveSpan(): ReturnType&lt;F&gt; | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="Tracer">
+<g fill="lightblue" stroke="#33322E" data-name="Tracer">
+<rect x="12505.5" y="86.5" height="115.0" width="294.0" data-name="Tracer"></rect>
+<path d="M12505.5 117.5 L12799.5 117.5" fill="none" data-name="Tracer"></path>
+<path d="M12505.5 125.5 L12799.5 125.5" fill="none" data-name="Tracer"></path>
+</g>
+<g transform="translate(12505.5, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Tracer">
+<a id="src/trace/tracer.ts.Tracer" xlink:href="src/trace/tracer.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="Tracer">Tracer</text></a>
+
+</g>
+</g>
+<g transform="translate(12505.5, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Tracer">
+
+</g>
+</g>
+<g transform="translate(12505.5, 125.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Tracer">
+<text x="0.0" y="13.5" stroke="none" data-name="Tracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopTracerProvider">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopTracerProvider">
+<rect x="13019.8" y="414.5" height="70.0" width="175.0" data-name="NoopTracerProvider"></rect>
+<path d="M13019.8 445.5 L13194.8 445.5" fill="none" data-name="NoopTracerProvider"></path>
+<path d="M13019.8 453.5 L13194.8 453.5" fill="none" data-name="NoopTracerProvider"></path>
+</g>
+<g transform="translate(13019.75, 414.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopTracerProvider">
+<a id="src/trace/NoopTracerProvider.ts.NoopTracerProvider" xlink:href="src/trace/NoopTracerProvider.ts"><text x="79.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopTracerProvider">NoopTracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(13019.75, 445.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopTracerProvider">
+
+</g>
+</g>
+<g transform="translate(13019.75, 453.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopTracerProvider">+getTracer(): Tracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerProvider">
+<g fill="lightblue" stroke="#33322E" data-name="TracerProvider">
+<rect x="13168.5" y="109.0" height="70.0" width="175.0" data-name="TracerProvider"></rect>
+<path d="M13168.5 140.0 L13343.5 140.0" fill="none" data-name="TracerProvider"></path>
+<path d="M13168.5 148.0 L13343.5 148.0" fill="none" data-name="TracerProvider"></path>
+</g>
+<g transform="translate(13168.5, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerProvider">
+<a id="src/trace/tracer_provider.ts.TracerProvider" xlink:href="src/trace/tracer_provider.ts"><text x="79.5" y="13.5" stroke="none" text-anchor="middle" data-name="TracerProvider">TracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(13168.5, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerProvider">
+
+</g>
+</g>
+<g transform="translate(13168.5, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerProvider">+getTracer(): Tracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="ProxyTracer">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProxyTracer">
+<rect x="12685.8" y="358.0" height="183.0" width="294.0" data-name="ProxyTracer"></rect>
+<path d="M12685.8 389.0 L12979.8 389.0" fill="none" data-name="ProxyTracer"></path>
+<path d="M12685.8 480.0 L12979.8 480.0" fill="none" data-name="ProxyTracer"></path>
+</g>
+<g transform="translate(12685.75, 358)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProxyTracer">
+<a id="src/trace/ProxyTracer.ts.ProxyTracer" xlink:href="src/trace/ProxyTracer.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="ProxyTracer">ProxyTracer</text></a>
+
+</g>
+</g>
+<g transform="translate(12685.75, 389)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracer">+_delegate?: Tracer</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracer">+_provider: TracerDelegator</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracer">#abstract name: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ProxyTracer">#abstract version?: string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="ProxyTracer">#abstract options?: TracerOptions</text>
+
+</g>
+</g>
+<g transform="translate(12685.75, 480)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracer">+_getTracer(): Tracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerDelegator">
+<g fill="lightblue" stroke="#33322E" data-name="TracerDelegator">
+<rect x="13383.5" y="109.0" height="70.0" width="340.0" data-name="TracerDelegator"></rect>
+<path d="M13383.5 140.0 L13723.5 140.0" fill="none" data-name="TracerDelegator"></path>
+<path d="M13383.5 148.0 L13723.5 148.0" fill="none" data-name="TracerDelegator"></path>
+</g>
+<g transform="translate(13383.5, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerDelegator">
+<a id="src/trace/ProxyTracer.ts.TracerDelegator" xlink:href="src/trace/ProxyTracer.ts"><text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="TracerDelegator">TracerDelegator</text></a>
+
+</g>
+</g>
+<g transform="translate(13383.5, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerDelegator">
+
+</g>
+</g>
+<g transform="translate(13383.5, 148)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerDelegator">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerDelegator">+getDelegateTracer(): Tracer | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="ProxyTracerProvider">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProxyTracerProvider">
+<rect x="14283.0" y="380.5" height="138.0" width="340.0" data-name="ProxyTracerProvider"></rect>
+<path d="M14283.0 411.5 L14623.0 411.5" fill="none" data-name="ProxyTracerProvider"></path>
+<path d="M14283.0 442.5 L14623.0 442.5" fill="none" data-name="ProxyTracerProvider"></path>
+</g>
+<g transform="translate(14283, 380.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProxyTracerProvider">
+<a id="src/trace/ProxyTracerProvider.ts.ProxyTracerProvider" xlink:href="src/trace/ProxyTracerProvider.ts"><text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="ProxyTracerProvider">ProxyTracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(14283, 411.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracerProvider">+_delegate?: TracerProvider</text>
+
+</g>
+</g>
+<g transform="translate(14283, 442.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracerProvider">+getTracer(): Tracer</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracerProvider">+getDelegate(): TracerProvider</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracerProvider">+setDelegate(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ProxyTracerProvider">+getDelegateTracer(): Tracer | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="Sampler">
+<g fill="lightblue" stroke="#33322E" data-name="Sampler">
+<rect x="13763.5" y="101.5" height="85.0" width="283.0" data-name="Sampler"></rect>
+<path d="M13763.5 132.5 L14046.5 132.5" fill="none" data-name="Sampler"></path>
+<path d="M13763.5 140.5 L14046.5 140.5" fill="none" data-name="Sampler"></path>
+</g>
+<g transform="translate(13763.5, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Sampler">
+<a id="src/trace/Sampler.ts.Sampler" xlink:href="src/trace/Sampler.ts"><text x="133.5" y="13.5" stroke="none" text-anchor="middle" data-name="Sampler">Sampler</text></a>
+
+</g>
+</g>
+<g transform="translate(13763.5, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Sampler">
+
+</g>
+</g>
+<g transform="translate(13763.5, 140.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Sampler">
+<text x="0.0" y="13.5" stroke="none" data-name="Sampler">+shouldSample(): SamplingResult</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Sampler">+toString(): string</text>
+
+</g>
+</g>
+</g>
+<g data-name="SamplingResult">
+<g fill="lightblue" stroke="#33322E" data-name="SamplingResult">
+<rect x="14086.5" y="94.0" height="100.0" width="290.0" data-name="SamplingResult"></rect>
+<path d="M14086.5 125.0 L14376.5 125.0" fill="none" data-name="SamplingResult"></path>
+<path d="M14086.5 186.0 L14376.5 186.0" fill="none" data-name="SamplingResult"></path>
+</g>
+<g transform="translate(14086.5, 94)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SamplingResult">
+<a id="src/trace/SamplingResult.ts.SamplingResult" xlink:href="src/trace/SamplingResult.ts"><text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="SamplingResult">SamplingResult</text></a>
+
+</g>
+</g>
+<g transform="translate(14086.5, 125)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SamplingResult">
+<text x="0.0" y="13.5" stroke="none" data-name="SamplingResult">+decision: SamplingDecision</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SamplingResult">+attributes?: Readonly&lt;Attributes&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SamplingResult">+traceState?: TraceState</text>
+
+</g>
+</g>
+<g transform="translate(14086.5, 186)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SamplingResult">
+
+</g>
+</g>
+</g>
+<g data-name="SamplingDecision">
+<g fill="lightgreen" stroke="#33322E" data-name="SamplingDecision">
+<rect x="14416.5" y="98.0" height="92.0" width="223.0" data-name="SamplingDecision"></rect>
+<path d="M14416.5 129.0 L14639.5 129.0" fill="none" data-name="SamplingDecision"></path>
+</g>
+<g transform="translate(14416.5, 98)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingDecision">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SamplingDecision">
+<a id="src/trace/SamplingResult.ts.SamplingDecision" xlink:href="src/trace/SamplingResult.ts"><text x="103.5" y="13.5" stroke="none" text-anchor="middle" data-name="SamplingDecision">SamplingDecision</text></a>
+
+</g>
+</g>
+<g transform="translate(14416.5, 129)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingDecision">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SamplingDecision">
+<text x="0.0" y="13.5" stroke="none" data-name="SamplingDecision">NOT_RECORD</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SamplingDecision">RECORD</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SamplingDecision">RECORD_AND_SAMPLED</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpanContext">
+<g fill="lightblue" stroke="#33322E" data-name="SpanContext">
+<rect x="14679.5" y="79.0" height="130.0" width="213.0" data-name="SpanContext"></rect>
+<path d="M14679.5 110.0 L14892.5 110.0" fill="none" data-name="SpanContext"></path>
+<path d="M14679.5 201.0 L14892.5 201.0" fill="none" data-name="SpanContext"></path>
+</g>
+<g transform="translate(14679.5, 79)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanContext">
+<a id="src/trace/span_context.ts.SpanContext" xlink:href="src/trace/span_context.ts"><text x="98.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanContext">SpanContext</text></a>
+
+</g>
+</g>
+<g transform="translate(14679.5, 110)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanContext">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanContext">+traceId: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanContext">+spanId: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanContext">+isRemote?: boolean</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanContext">+traceFlags: number</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanContext">+traceState?: TraceState</text>
+
+</g>
+</g>
+<g transform="translate(14679.5, 201)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanContext">
+
+</g>
+</g>
+</g>
+<g data-name="SpanKind">
+<g fill="lightgreen" stroke="#33322E" data-name="SpanKind">
+<rect x="14932.5" y="83.0" height="122.0" width="113.0" data-name="SpanKind"></rect>
+<path d="M14932.5 114.0 L15045.5 114.0" fill="none" data-name="SpanKind"></path>
+</g>
+<g transform="translate(14932.5, 83)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanKind">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanKind">
+<a id="src/trace/span_kind.ts.SpanKind" xlink:href="src/trace/span_kind.ts"><text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanKind">SpanKind</text></a>
+
+</g>
+</g>
+<g transform="translate(14932.5, 114)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanKind">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanKind">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanKind">INTERNAL</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanKind">SERVER</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanKind">CLIENT</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanKind">PRODUCER</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanKind">CONSUMER</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpanOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SpanOptions">
+<rect x="15085.5" y="79.0" height="130.0" width="197.0" data-name="SpanOptions"></rect>
+<path d="M15085.5 110.0 L15282.5 110.0" fill="none" data-name="SpanOptions"></path>
+<path d="M15085.5 201.0 L15282.5 201.0" fill="none" data-name="SpanOptions"></path>
+</g>
+<g transform="translate(15085.5, 79)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanOptions">
+<a id="src/trace/SpanOptions.ts.SpanOptions" xlink:href="src/trace/SpanOptions.ts"><text x="90.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanOptions">SpanOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(15085.5, 110)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanOptions">+kind?: SpanKind</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanOptions">+attributes?: Attributes</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanOptions">+links?: Link[]</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanOptions">+startTime?: TimeInput</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanOptions">+root?: boolean</text>
+
+</g>
+</g>
+<g transform="translate(15085.5, 201)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanOptions">
+
+</g>
+</g>
+</g>
+<g data-name="SpanStatus">
+<g fill="lightblue" stroke="#33322E" data-name="SpanStatus">
+<rect x="15322.5" y="101.5" height="85.0" width="208.0" data-name="SpanStatus"></rect>
+<path d="M15322.5 132.5 L15530.5 132.5" fill="none" data-name="SpanStatus"></path>
+<path d="M15322.5 178.5 L15530.5 178.5" fill="none" data-name="SpanStatus"></path>
+</g>
+<g transform="translate(15322.5, 101.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanStatus">
+<a id="src/trace/status.ts.SpanStatus" xlink:href="src/trace/status.ts"><text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="SpanStatus">SpanStatus</text></a>
+
+</g>
+</g>
+<g transform="translate(15322.5, 132.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanStatus">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanStatus">+code: SpanStatusCode</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanStatus">+message?: string</text>
+
+</g>
+</g>
+<g transform="translate(15322.5, 178.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanStatus">
+
+</g>
+</g>
+</g>
+<g data-name="SpanStatusCode">
+<g fill="lightgreen" stroke="#33322E" data-name="SpanStatusCode">
+<rect x="15570.5" y="98.0" height="92.0" width="149.0" data-name="SpanStatusCode"></rect>
+<path d="M15570.5 129.0 L15719.5 129.0" fill="none" data-name="SpanStatusCode"></path>
+</g>
+<g transform="translate(15570.5, 98)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatusCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanStatusCode">
+<a id="src/trace/status.ts.SpanStatusCode" xlink:href="src/trace/status.ts"><text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanStatusCode">SpanStatusCode</text></a>
+
+</g>
+</g>
+<g transform="translate(15570.5, 129)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatusCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanStatusCode">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanStatusCode">UNSET</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanStatusCode">OK</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanStatusCode">ERROR</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceFlags">
+<g fill="lightgreen" stroke="#33322E" data-name="TraceFlags">
+<rect x="15759.5" y="105.5" height="77.0" width="104.0" data-name="TraceFlags"></rect>
+<path d="M15759.5 136.5 L15863.5 136.5" fill="none" data-name="TraceFlags"></path>
+</g>
+<g transform="translate(15759.5, 105.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceFlags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceFlags">
+<a id="src/trace/trace_flags.ts.TraceFlags" xlink:href="src/trace/trace_flags.ts"><text x="44.0" y="13.5" stroke="none" text-anchor="middle" data-name="TraceFlags">TraceFlags</text></a>
+
+</g>
+</g>
+<g transform="translate(15759.5, 136.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceFlags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceFlags">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceFlags">NONE</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceFlags">SAMPLED</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceState">
+<g fill="lightblue" stroke="#33322E" data-name="TraceState">
+<rect x="15903.5" y="86.5" height="115.0" width="211.0" data-name="TraceState"></rect>
+<path d="M15903.5 117.5 L16114.5 117.5" fill="none" data-name="TraceState"></path>
+<path d="M15903.5 125.5 L16114.5 125.5" fill="none" data-name="TraceState"></path>
+</g>
+<g transform="translate(15903.5, 86.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceState">
+<a id="src/trace/trace_state.ts.TraceState" xlink:href="src/trace/trace_state.ts"><text x="97.5" y="13.5" stroke="none" text-anchor="middle" data-name="TraceState">TraceState</text></a>
+
+</g>
+</g>
+<g transform="translate(15903.5, 117.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TraceState">
+
+</g>
+</g>
+<g transform="translate(15903.5, 125.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceState">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceState">+set(): TraceState</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceState">+unset(): TraceState</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceState">+get(): string | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceState">+serialize(): string</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerOptions">
+<g fill="lightblue" stroke="#33322E" data-name="TracerOptions">
+<rect x="16154.5" y="109.0" height="70.0" width="174.0" data-name="TracerOptions"></rect>
+<path d="M16154.5 140.0 L16328.5 140.0" fill="none" data-name="TracerOptions"></path>
+<path d="M16154.5 171.0 L16328.5 171.0" fill="none" data-name="TracerOptions"></path>
+</g>
+<g transform="translate(16154.5, 109)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerOptions">
+<a id="src/trace/tracer_options.ts.TracerOptions" xlink:href="src/trace/tracer_options.ts"><text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="TracerOptions">TracerOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(16154.5, 140)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerOptions">+schemaUrl?: string</text>
+
+</g>
+</g>
+<g transform="translate(16154.5, 171)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerOptions">
+
+</g>
+</g>
+</g>
+<g data-name="BaggageImpl">
+<g fill="#eee8d5" stroke="#33322E" data-name="BaggageImpl">
+<rect x="2996.3" y="365.5" height="168.0" width="333.0" data-name="BaggageImpl"></rect>
+<path d="M2996.3 396.5 L3329.3 396.5" fill="none" data-name="BaggageImpl"></path>
+<path d="M2996.3 427.5 L3329.3 427.5" fill="none" data-name="BaggageImpl"></path>
+</g>
+<g transform="translate(2996.25, 365.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="BaggageImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="BaggageImpl">
+<a id="src/baggage/internal/baggage-impl.ts.BaggageImpl" xlink:href="src/baggage/internal/baggage-impl.ts"><text x="158.5" y="13.5" stroke="none" text-anchor="middle" data-name="BaggageImpl">BaggageImpl</text></a>
+
+</g>
+</g>
+<g transform="translate(2996.25, 396.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaggageImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BaggageImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="BaggageImpl">+_entries: Map&lt;string, BaggageEntry&gt;</text>
+
+</g>
+</g>
+<g transform="translate(2996.25, 427.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="BaggageImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="BaggageImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="BaggageImpl">+getEntry(): BaggageEntry | undefined</text>
+<text x="0.0" y="28.5" stroke="none" data-name="BaggageImpl">+getAllEntries(): [string, BaggageEntry][]</text>
+<text x="0.0" y="43.5" stroke="none" data-name="BaggageImpl">+setEntry(): BaggageImpl</text>
+<text x="0.0" y="58.5" stroke="none" data-name="BaggageImpl">+removeEntry(): BaggageImpl</text>
+<text x="0.0" y="73.5" stroke="none" data-name="BaggageImpl">+removeEntries(): BaggageImpl</text>
+<text x="0.0" y="88.5" stroke="none" data-name="BaggageImpl">+clear(): BaggageImpl</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceStateImpl">
+<g fill="#eee8d5" stroke="#33322E" data-name="TraceStateImpl">
+<rect x="15860.0" y="358.0" height="183.0" width="298.0" data-name="TraceStateImpl"></rect>
+<path d="M15860.0 389.0 L16158.0 389.0" fill="none" data-name="TraceStateImpl"></path>
+<path d="M15860.0 420.0 L16158.0 420.0" fill="none" data-name="TraceStateImpl"></path>
+</g>
+<g transform="translate(15860, 358)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceStateImpl">
+<a id="src/trace/internal/tracestate-impl.ts.TraceStateImpl" xlink:href="src/trace/internal/tracestate-impl.ts"><text x="141.0" y="13.5" stroke="none" text-anchor="middle" data-name="TraceStateImpl">TraceStateImpl</text></a>
+
+</g>
+</g>
+<g transform="translate(15860, 389)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceStateImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceStateImpl">+_internalState: Map&lt;string, string&gt;</text>
+
+</g>
+</g>
+<g transform="translate(15860, 420)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceStateImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceStateImpl">+set(): TraceStateImpl</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceStateImpl">+unset(): TraceStateImpl</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceStateImpl">+get(): string | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceStateImpl">+serialize(): string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="TraceStateImpl">+_parse(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="TraceStateImpl">+_keys(): string[]</text>
+<text x="0.0" y="103.5" stroke="none" data-name="TraceStateImpl">+_clone(): TraceStateImpl</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>

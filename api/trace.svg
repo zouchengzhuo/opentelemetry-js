@@ -1,0 +1,637 @@
+<svg version="1.1" baseProfile="full" width="4784.3" height="499.0" viewbox="0 0 4784.25 499" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xmlns:ev="http://www.w3.org/2001/xml-events">
+<desc >#.interface: fill=lightblue
+#.enumeration: fill=lightgreen
+#.type: fill=lightgray
+[&lt;interface&gt;Link|+context: SpanContext;+attributes?: Attributes;+droppedAttributesCount?: number|]
+[NonRecordingSpan|+abstract _spanContext: SpanContext|+spanContext(): SpanContext;+setAttribute(): this;+setAttributes(): this;+addEvent(): this;+setStatus(): this;+updateName(): this;+end(): void;+isRecording(): boolean;+recordException(): void]
+[Span]&lt;:--[NonRecordingSpan]
+[NoopTracer||+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt; \| undefined]
+[Tracer]&lt;:--[NoopTracer]
+[NoopTracerProvider||+getTracer(): Tracer]
+[TracerProvider]&lt;:--[NoopTracerProvider]
+[ProxyTracer|+_delegate?: Tracer;+_provider: TracerDelegator;\#abstract name: string;\#abstract version?: string;\#abstract options?: TracerOptions|+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt;;+_getTracer(): NoopTracer]
+[&lt;interface&gt;TracerDelegator||+getDelegateTracer(): Tracer \| undefined]
+[Tracer]&lt;:--[ProxyTracer]
+[ProxyTracerProvider|+_delegate?: TracerProvider|+getTracer(): Tracer;+getDelegate(): TracerProvider;+setDelegate(): void;+getDelegateTracer(): Tracer \| undefined]
+[TracerProvider]&lt;:--[ProxyTracerProvider]
+[&lt;interface&gt;Sampler||+shouldSample(): SamplingResult;+toString(): string]
+[&lt;interface&gt;SamplingResult|+decision: SamplingDecision;+attributes?: Readonly&lt;Attributes&gt;;+traceState?: TraceState|]
+[&lt;enumeration&gt;SamplingDecision|NOT_RECORD;RECORD;RECORD_AND_SAMPLED]
+[&lt;interface&gt;SpanContext|+traceId: string;+spanId: string;+isRemote?: boolean;+traceFlags: number;+traceState?: TraceState|]
+[&lt;enumeration&gt;SpanKind|INTERNAL;SERVER;CLIENT;PRODUCER;CONSUMER]
+[&lt;interface&gt;Span||+spanContext(): SpanContext;+setAttribute(): this;+setAttributes(): this;+addEvent(): this;+setStatus(): this;+updateName(): this;+end(): void;+isRecording(): boolean;+recordException(): void]
+[&lt;interface&gt;SpanOptions|+kind?: SpanKind;+attributes?: Attributes;+links?: Link\[\];+startTime?: TimeInput;+root?: boolean|]
+[&lt;interface&gt;SpanStatus|+code: SpanStatusCode;+message?: string|]
+[&lt;enumeration&gt;SpanStatusCode|UNSET;OK;ERROR]
+[&lt;enumeration&gt;TraceFlags|NONE;SAMPLED]
+[&lt;interface&gt;TraceState||+set(): TraceState;+unset(): TraceState;+get(): string \| undefined;+serialize(): string]
+[&lt;interface&gt;TracerOptions|+schemaUrl?: string|]
+[&lt;interface&gt;TracerProvider||+getTracer(): Tracer]
+[&lt;interface&gt;Tracer||+startSpan(): Span;+startActiveSpan(): ReturnType&lt;F&gt;;+startActiveSpan(): ReturnType&lt;F&gt;;+startActiveSpan(): ReturnType&lt;F&gt;]
+[TraceStateImpl|+_internalState: Map&lt;string, string&gt;|+set(): TraceStateImpl;+unset(): TraceStateImpl;+get(): string \| undefined;+serialize(): string;+_parse(): void;+_keys(): string\[\];+_clone(): TraceStateImpl]
+[TraceState]&lt;:--[TraceStateImpl]</desc>
+<g stroke-width="1.0" text-align="left" font="12pt Helvetica, Arial, sans-serif" font-size="12pt" font-family="Helvetica" font-weight="normal" font-style="normal">
+<g font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" stroke-width="3.0" stroke-linejoin="round" stroke-linecap="round" stroke="#33322E">
+<g stroke="transparent" fill="transparent">
+<rect x="0.0" y="0.0" height="499.0" width="4784.3" stroke="none"></rect>
+</g>
+<g transform="translate(8, 8)" fill="#33322E">
+<g transform="translate(20, 20)" fill="#eee8d5" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal">
+<g stroke-dasharray="6 6">
+<path d="M459.0 203.3 L459 210 L459 230 L459.0 230.0 " fill="none"></path>
+</g>
+<path d="M464.3 203.3 L459.0 203.3 L453.7 203.3 L459.0 190.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M935.3 159.4 L851.5 210 L851.5 294 L851.5 294.0 " fill="none"></path>
+</g>
+<path d="M938.1 164.0 L935.3 159.4 L932.6 154.8 L946.8 152.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1599.9 138.2 L1507 210 L1507 301.5 L1507.0 301.5 " fill="none"></path>
+</g>
+<path d="M1603.2 142.4 L1599.9 138.2 L1596.7 133.9 L1610.5 130.0 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1148.7 159.4 L1232.5 210 L1232.5 245 L1232.5 245.0 " fill="none"></path>
+</g>
+<path d="M1151.4 154.8 L1148.7 159.4 L1145.9 164.0 L1137.3 152.5 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M1756.5 104.7 L2852.75 210 L2852.75 267.5 L2852.8 267.5 " fill="none"></path>
+</g>
+<path d="M1757.0 99.4 L1756.5 104.7 L1756.0 110.0 L1743.3 103.4 Z"></path>
+<g stroke-dasharray="6 6">
+<path d="M4408.8 165.8 L4408.75 210 L4408.75 245 L4408.8 245.0 " fill="none"></path>
+</g>
+<path d="M4414.1 165.8 L4408.8 165.8 L4403.4 165.8 L4408.8 152.5 Z"></path>
+<g data-name="Link">
+<g fill="lightblue" stroke="#33322E" data-name="Link">
+<rect x="0.0" y="45.0" height="100.0" width="294.0" data-name="Link"></rect>
+<path d="M0.0 76.0 L294.0 76.0" fill="none" data-name="Link"></path>
+<path d="M0.0 137.0 L294.0 137.0" fill="none" data-name="Link"></path>
+</g>
+<g transform="translate(0, 45)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Link">
+<a id="src/trace/link.ts.Link" xlink:href="src/trace/link.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="Link">Link</text></a>
+
+</g>
+</g>
+<g transform="translate(0, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Link">
+<text x="0.0" y="13.5" stroke="none" data-name="Link">+context: SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Link">+attributes?: Attributes</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Link">+droppedAttributesCount?: number</text>
+
+</g>
+</g>
+<g transform="translate(0, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Link">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Link">
+
+</g>
+</g>
+</g>
+<g data-name="NonRecordingSpan">
+<g fill="#eee8d5" stroke="#33322E" data-name="NonRecordingSpan">
+<rect x="300.5" y="230.0" height="213.0" width="317.0" data-name="NonRecordingSpan"></rect>
+<path d="M300.5 261.0 L617.5 261.0" fill="none" data-name="NonRecordingSpan"></path>
+<path d="M300.5 292.0 L617.5 292.0" fill="none" data-name="NonRecordingSpan"></path>
+</g>
+<g transform="translate(300.5, 230)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NonRecordingSpan">
+<a id="src/trace/NonRecordingSpan.ts.NonRecordingSpan" xlink:href="src/trace/NonRecordingSpan.ts"><text x="150.5" y="13.5" stroke="none" text-anchor="middle" data-name="NonRecordingSpan">NonRecordingSpan</text></a>
+
+</g>
+</g>
+<g transform="translate(300.5, 261)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NonRecordingSpan">
+<text x="0.0" y="13.5" stroke="none" data-name="NonRecordingSpan">+abstract _spanContext: SpanContext</text>
+
+</g>
+</g>
+<g transform="translate(300.5, 292)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NonRecordingSpan">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NonRecordingSpan">
+<text x="0.0" y="13.5" stroke="none" data-name="NonRecordingSpan">+spanContext(): SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NonRecordingSpan">+setAttribute(): this</text>
+<text x="0.0" y="43.5" stroke="none" data-name="NonRecordingSpan">+setAttributes(): this</text>
+<text x="0.0" y="58.5" stroke="none" data-name="NonRecordingSpan">+addEvent(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="NonRecordingSpan">+setStatus(): this</text>
+<text x="0.0" y="88.5" stroke="none" data-name="NonRecordingSpan">+updateName(): this</text>
+<text x="0.0" y="103.5" stroke="none" data-name="NonRecordingSpan">+end(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="NonRecordingSpan">+isRecording(): boolean</text>
+<text x="0.0" y="133.5" stroke="none" data-name="NonRecordingSpan">+recordException(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="Span">
+<g fill="lightblue" stroke="#33322E" data-name="Span">
+<rect x="334.0" y="0.0" height="190.0" width="250.0" data-name="Span"></rect>
+<path d="M334.0 31.0 L584.0 31.0" fill="none" data-name="Span"></path>
+<path d="M334.0 39.0 L584.0 39.0" fill="none" data-name="Span"></path>
+</g>
+<g transform="translate(334, 0)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Span">
+<a id="src/trace/span.ts.Span" xlink:href="src/trace/span.ts"><text x="117.0" y="13.5" stroke="none" text-anchor="middle" data-name="Span">Span</text></a>
+
+</g>
+</g>
+<g transform="translate(334, 31)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Span">
+
+</g>
+</g>
+<g transform="translate(334, 39)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Span">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Span">
+<text x="0.0" y="13.5" stroke="none" data-name="Span">+spanContext(): SpanContext</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Span">+setAttribute(): this</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Span">+setAttributes(): this</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Span">+addEvent(): this</text>
+<text x="0.0" y="73.5" stroke="none" data-name="Span">+setStatus(): this</text>
+<text x="0.0" y="88.5" stroke="none" data-name="Span">+updateName(): this</text>
+<text x="0.0" y="103.5" stroke="none" data-name="Span">+end(): void</text>
+<text x="0.0" y="118.5" stroke="none" data-name="Span">+isRecording(): boolean</text>
+<text x="0.0" y="133.5" stroke="none" data-name="Span">+recordException(): void</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopTracer">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopTracer">
+<rect x="657.5" y="294.0" height="85.0" width="388.0" data-name="NoopTracer"></rect>
+<path d="M657.5 325.0 L1045.5 325.0" fill="none" data-name="NoopTracer"></path>
+<path d="M657.5 333.0 L1045.5 333.0" fill="none" data-name="NoopTracer"></path>
+</g>
+<g transform="translate(657.5, 294)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopTracer">
+<a id="src/trace/NoopTracer.ts.NoopTracer" xlink:href="src/trace/NoopTracer.ts"><text x="186.0" y="13.5" stroke="none" text-anchor="middle" data-name="NoopTracer">NoopTracer</text></a>
+
+</g>
+</g>
+<g transform="translate(657.5, 325)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopTracer">
+
+</g>
+</g>
+<g transform="translate(657.5, 333)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopTracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="NoopTracer">+startActiveSpan(): ReturnType&lt;F&gt; | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="Tracer">
+<g fill="lightblue" stroke="#33322E" data-name="Tracer">
+<rect x="895.0" y="37.5" height="115.0" width="294.0" data-name="Tracer"></rect>
+<path d="M895.0 68.5 L1189.0 68.5" fill="none" data-name="Tracer"></path>
+<path d="M895.0 76.5 L1189.0 76.5" fill="none" data-name="Tracer"></path>
+</g>
+<g transform="translate(895, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Tracer">
+<a id="src/trace/tracer.ts.Tracer" xlink:href="src/trace/tracer.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="Tracer">Tracer</text></a>
+
+</g>
+</g>
+<g transform="translate(895, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Tracer">
+
+</g>
+</g>
+<g transform="translate(895, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Tracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Tracer">
+<text x="0.0" y="13.5" stroke="none" data-name="Tracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="58.5" stroke="none" data-name="Tracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+
+</g>
+</g>
+</g>
+<g data-name="NoopTracerProvider">
+<g fill="#eee8d5" stroke="#33322E" data-name="NoopTracerProvider">
+<rect x="1419.5" y="301.5" height="70.0" width="175.0" data-name="NoopTracerProvider"></rect>
+<path d="M1419.5 332.5 L1594.5 332.5" fill="none" data-name="NoopTracerProvider"></path>
+<path d="M1419.5 340.5 L1594.5 340.5" fill="none" data-name="NoopTracerProvider"></path>
+</g>
+<g transform="translate(1419.5, 301.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="NoopTracerProvider">
+<a id="src/trace/NoopTracerProvider.ts.NoopTracerProvider" xlink:href="src/trace/NoopTracerProvider.ts"><text x="79.5" y="13.5" stroke="none" text-anchor="middle" data-name="NoopTracerProvider">NoopTracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(1419.5, 332.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="NoopTracerProvider">
+
+</g>
+</g>
+<g transform="translate(1419.5, 340.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="NoopTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="NoopTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="NoopTracerProvider">+getTracer(): Tracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerProvider">
+<g fill="lightblue" stroke="#33322E" data-name="TracerProvider">
+<rect x="1568.3" y="60.0" height="70.0" width="175.0" data-name="TracerProvider"></rect>
+<path d="M1568.3 91.0 L1743.3 91.0" fill="none" data-name="TracerProvider"></path>
+<path d="M1568.3 99.0 L1743.3 99.0" fill="none" data-name="TracerProvider"></path>
+</g>
+<g transform="translate(1568.25, 60)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerProvider">
+<a id="src/trace/tracer_provider.ts.TracerProvider" xlink:href="src/trace/tracer_provider.ts"><text x="79.5" y="13.5" stroke="none" text-anchor="middle" data-name="TracerProvider">TracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(1568.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerProvider">
+
+</g>
+</g>
+<g transform="translate(1568.25, 99)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerProvider">+getTracer(): Tracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="ProxyTracer">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProxyTracer">
+<rect x="1085.5" y="245.0" height="183.0" width="294.0" data-name="ProxyTracer"></rect>
+<path d="M1085.5 276.0 L1379.5 276.0" fill="none" data-name="ProxyTracer"></path>
+<path d="M1085.5 367.0 L1379.5 367.0" fill="none" data-name="ProxyTracer"></path>
+</g>
+<g transform="translate(1085.5, 245)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProxyTracer">
+<a id="src/trace/ProxyTracer.ts.ProxyTracer" xlink:href="src/trace/ProxyTracer.ts"><text x="139.0" y="13.5" stroke="none" text-anchor="middle" data-name="ProxyTracer">ProxyTracer</text></a>
+
+</g>
+</g>
+<g transform="translate(1085.5, 276)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracer">+_delegate?: Tracer</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracer">+_provider: TracerDelegator</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracer">#abstract name: string</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ProxyTracer">#abstract version?: string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="ProxyTracer">#abstract options?: TracerOptions</text>
+
+</g>
+</g>
+<g transform="translate(1085.5, 367)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracer">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracer">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracer">+startSpan(): Span</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracer">+startActiveSpan(): ReturnType&lt;F&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracer">+_getTracer(): NoopTracer</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerDelegator">
+<g fill="lightblue" stroke="#33322E" data-name="TracerDelegator">
+<rect x="1783.3" y="60.0" height="70.0" width="340.0" data-name="TracerDelegator"></rect>
+<path d="M1783.3 91.0 L2123.3 91.0" fill="none" data-name="TracerDelegator"></path>
+<path d="M1783.3 99.0 L2123.3 99.0" fill="none" data-name="TracerDelegator"></path>
+</g>
+<g transform="translate(1783.25, 60)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerDelegator">
+<a id="src/trace/ProxyTracer.ts.TracerDelegator" xlink:href="src/trace/ProxyTracer.ts"><text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="TracerDelegator">TracerDelegator</text></a>
+
+</g>
+</g>
+<g transform="translate(1783.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerDelegator">
+
+</g>
+</g>
+<g transform="translate(1783.25, 99)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerDelegator">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerDelegator">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerDelegator">+getDelegateTracer(): Tracer | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="ProxyTracerProvider">
+<g fill="#eee8d5" stroke="#33322E" data-name="ProxyTracerProvider">
+<rect x="2682.8" y="267.5" height="138.0" width="340.0" data-name="ProxyTracerProvider"></rect>
+<path d="M2682.8 298.5 L3022.8 298.5" fill="none" data-name="ProxyTracerProvider"></path>
+<path d="M2682.8 329.5 L3022.8 329.5" fill="none" data-name="ProxyTracerProvider"></path>
+</g>
+<g transform="translate(2682.75, 267.5)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="ProxyTracerProvider">
+<a id="src/trace/ProxyTracerProvider.ts.ProxyTracerProvider" xlink:href="src/trace/ProxyTracerProvider.ts"><text x="162.0" y="13.5" stroke="none" text-anchor="middle" data-name="ProxyTracerProvider">ProxyTracerProvider</text></a>
+
+</g>
+</g>
+<g transform="translate(2682.75, 298.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracerProvider">+_delegate?: TracerProvider</text>
+
+</g>
+</g>
+<g transform="translate(2682.75, 329.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="ProxyTracerProvider">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="ProxyTracerProvider">
+<text x="0.0" y="13.5" stroke="none" data-name="ProxyTracerProvider">+getTracer(): Tracer</text>
+<text x="0.0" y="28.5" stroke="none" data-name="ProxyTracerProvider">+getDelegate(): TracerProvider</text>
+<text x="0.0" y="43.5" stroke="none" data-name="ProxyTracerProvider">+setDelegate(): void</text>
+<text x="0.0" y="58.5" stroke="none" data-name="ProxyTracerProvider">+getDelegateTracer(): Tracer | undefined</text>
+
+</g>
+</g>
+</g>
+<g data-name="Sampler">
+<g fill="lightblue" stroke="#33322E" data-name="Sampler">
+<rect x="2163.3" y="52.5" height="85.0" width="283.0" data-name="Sampler"></rect>
+<path d="M2163.3 83.5 L2446.3 83.5" fill="none" data-name="Sampler"></path>
+<path d="M2163.3 91.5 L2446.3 91.5" fill="none" data-name="Sampler"></path>
+</g>
+<g transform="translate(2163.25, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="Sampler">
+<a id="src/trace/Sampler.ts.Sampler" xlink:href="src/trace/Sampler.ts"><text x="133.5" y="13.5" stroke="none" text-anchor="middle" data-name="Sampler">Sampler</text></a>
+
+</g>
+</g>
+<g transform="translate(2163.25, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" data-name="Sampler">
+
+</g>
+</g>
+<g transform="translate(2163.25, 91.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="Sampler">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="Sampler">
+<text x="0.0" y="13.5" stroke="none" data-name="Sampler">+shouldSample(): SamplingResult</text>
+<text x="0.0" y="28.5" stroke="none" data-name="Sampler">+toString(): string</text>
+
+</g>
+</g>
+</g>
+<g data-name="SamplingResult">
+<g fill="lightblue" stroke="#33322E" data-name="SamplingResult">
+<rect x="2486.3" y="45.0" height="100.0" width="290.0" data-name="SamplingResult"></rect>
+<path d="M2486.3 76.0 L2776.3 76.0" fill="none" data-name="SamplingResult"></path>
+<path d="M2486.3 137.0 L2776.3 137.0" fill="none" data-name="SamplingResult"></path>
+</g>
+<g transform="translate(2486.25, 45)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SamplingResult">
+<a id="src/trace/SamplingResult.ts.SamplingResult" xlink:href="src/trace/SamplingResult.ts"><text x="137.0" y="13.5" stroke="none" text-anchor="middle" data-name="SamplingResult">SamplingResult</text></a>
+
+</g>
+</g>
+<g transform="translate(2486.25, 76)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SamplingResult">
+<text x="0.0" y="13.5" stroke="none" data-name="SamplingResult">+decision: SamplingDecision</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SamplingResult">+attributes?: Readonly&lt;Attributes&gt;</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SamplingResult">+traceState?: TraceState</text>
+
+</g>
+</g>
+<g transform="translate(2486.25, 137)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingResult">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SamplingResult">
+
+</g>
+</g>
+</g>
+<g data-name="SamplingDecision">
+<g fill="lightgreen" stroke="#33322E" data-name="SamplingDecision">
+<rect x="2816.3" y="49.0" height="92.0" width="223.0" data-name="SamplingDecision"></rect>
+<path d="M2816.3 80.0 L3039.3 80.0" fill="none" data-name="SamplingDecision"></path>
+</g>
+<g transform="translate(2816.25, 49)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingDecision">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SamplingDecision">
+<a id="src/trace/SamplingResult.ts.SamplingDecision" xlink:href="src/trace/SamplingResult.ts"><text x="103.5" y="13.5" stroke="none" text-anchor="middle" data-name="SamplingDecision">SamplingDecision</text></a>
+
+</g>
+</g>
+<g transform="translate(2816.25, 80)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SamplingDecision">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SamplingDecision">
+<text x="0.0" y="13.5" stroke="none" data-name="SamplingDecision">NOT_RECORD</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SamplingDecision">RECORD</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SamplingDecision">RECORD_AND_SAMPLED</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpanContext">
+<g fill="lightblue" stroke="#33322E" data-name="SpanContext">
+<rect x="3079.3" y="30.0" height="130.0" width="213.0" data-name="SpanContext"></rect>
+<path d="M3079.3 61.0 L3292.3 61.0" fill="none" data-name="SpanContext"></path>
+<path d="M3079.3 152.0 L3292.3 152.0" fill="none" data-name="SpanContext"></path>
+</g>
+<g transform="translate(3079.25, 30)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanContext">
+<a id="src/trace/span_context.ts.SpanContext" xlink:href="src/trace/span_context.ts"><text x="98.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanContext">SpanContext</text></a>
+
+</g>
+</g>
+<g transform="translate(3079.25, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanContext">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanContext">+traceId: string</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanContext">+spanId: string</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanContext">+isRemote?: boolean</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanContext">+traceFlags: number</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanContext">+traceState?: TraceState</text>
+
+</g>
+</g>
+<g transform="translate(3079.25, 152)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanContext">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanContext">
+
+</g>
+</g>
+</g>
+<g data-name="SpanKind">
+<g fill="lightgreen" stroke="#33322E" data-name="SpanKind">
+<rect x="3332.3" y="34.0" height="122.0" width="113.0" data-name="SpanKind"></rect>
+<path d="M3332.3 65.0 L3445.3 65.0" fill="none" data-name="SpanKind"></path>
+</g>
+<g transform="translate(3332.25, 34)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanKind">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanKind">
+<a id="src/trace/span_kind.ts.SpanKind" xlink:href="src/trace/span_kind.ts"><text x="48.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanKind">SpanKind</text></a>
+
+</g>
+</g>
+<g transform="translate(3332.25, 65)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanKind">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanKind">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanKind">INTERNAL</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanKind">SERVER</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanKind">CLIENT</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanKind">PRODUCER</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanKind">CONSUMER</text>
+
+</g>
+</g>
+</g>
+<g data-name="SpanOptions">
+<g fill="lightblue" stroke="#33322E" data-name="SpanOptions">
+<rect x="3485.3" y="30.0" height="130.0" width="197.0" data-name="SpanOptions"></rect>
+<path d="M3485.3 61.0 L3682.3 61.0" fill="none" data-name="SpanOptions"></path>
+<path d="M3485.3 152.0 L3682.3 152.0" fill="none" data-name="SpanOptions"></path>
+</g>
+<g transform="translate(3485.25, 30)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanOptions">
+<a id="src/trace/SpanOptions.ts.SpanOptions" xlink:href="src/trace/SpanOptions.ts"><text x="90.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanOptions">SpanOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(3485.25, 61)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanOptions">+kind?: SpanKind</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanOptions">+attributes?: Attributes</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanOptions">+links?: Link[]</text>
+<text x="0.0" y="58.5" stroke="none" data-name="SpanOptions">+startTime?: TimeInput</text>
+<text x="0.0" y="73.5" stroke="none" data-name="SpanOptions">+root?: boolean</text>
+
+</g>
+</g>
+<g transform="translate(3485.25, 152)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanOptions">
+
+</g>
+</g>
+</g>
+<g data-name="SpanStatus">
+<g fill="lightblue" stroke="#33322E" data-name="SpanStatus">
+<rect x="3722.3" y="52.5" height="85.0" width="208.0" data-name="SpanStatus"></rect>
+<path d="M3722.3 83.5 L3930.3 83.5" fill="none" data-name="SpanStatus"></path>
+<path d="M3722.3 129.5 L3930.3 129.5" fill="none" data-name="SpanStatus"></path>
+</g>
+<g transform="translate(3722.25, 52.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanStatus">
+<a id="src/trace/status.ts.SpanStatus" xlink:href="src/trace/status.ts"><text x="96.0" y="13.5" stroke="none" text-anchor="middle" data-name="SpanStatus">SpanStatus</text></a>
+
+</g>
+</g>
+<g transform="translate(3722.25, 83.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanStatus">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanStatus">+code: SpanStatusCode</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanStatus">+message?: string</text>
+
+</g>
+</g>
+<g transform="translate(3722.25, 129.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatus">
+<g transform="translate(8, 8)" fill="#33322E" data-name="SpanStatus">
+
+</g>
+</g>
+</g>
+<g data-name="SpanStatusCode">
+<g fill="lightgreen" stroke="#33322E" data-name="SpanStatusCode">
+<rect x="3970.3" y="49.0" height="92.0" width="149.0" data-name="SpanStatusCode"></rect>
+<path d="M3970.3 80.0 L4119.3 80.0" fill="none" data-name="SpanStatusCode"></path>
+</g>
+<g transform="translate(3970.25, 49)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatusCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="SpanStatusCode">
+<a id="src/trace/status.ts.SpanStatusCode" xlink:href="src/trace/status.ts"><text x="66.5" y="13.5" stroke="none" text-anchor="middle" data-name="SpanStatusCode">SpanStatusCode</text></a>
+
+</g>
+</g>
+<g transform="translate(3970.25, 80)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="SpanStatusCode">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="SpanStatusCode">
+<text x="0.0" y="13.5" stroke="none" data-name="SpanStatusCode">UNSET</text>
+<text x="0.0" y="28.5" stroke="none" data-name="SpanStatusCode">OK</text>
+<text x="0.0" y="43.5" stroke="none" data-name="SpanStatusCode">ERROR</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceFlags">
+<g fill="lightgreen" stroke="#33322E" data-name="TraceFlags">
+<rect x="4159.3" y="56.5" height="77.0" width="104.0" data-name="TraceFlags"></rect>
+<path d="M4159.3 87.5 L4263.3 87.5" fill="none" data-name="TraceFlags"></path>
+</g>
+<g transform="translate(4159.25, 56.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceFlags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceFlags">
+<a id="src/trace/trace_flags.ts.TraceFlags" xlink:href="src/trace/trace_flags.ts"><text x="44.0" y="13.5" stroke="none" text-anchor="middle" data-name="TraceFlags">TraceFlags</text></a>
+
+</g>
+</g>
+<g transform="translate(4159.25, 87.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceFlags">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceFlags">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceFlags">NONE</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceFlags">SAMPLED</text>
+
+</g>
+</g>
+</g>
+<g data-name="TraceState">
+<g fill="lightblue" stroke="#33322E" data-name="TraceState">
+<rect x="4303.3" y="37.5" height="115.0" width="211.0" data-name="TraceState"></rect>
+<path d="M4303.3 68.5 L4514.3 68.5" fill="none" data-name="TraceState"></path>
+<path d="M4303.3 76.5 L4514.3 76.5" fill="none" data-name="TraceState"></path>
+</g>
+<g transform="translate(4303.25, 37.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceState">
+<a id="src/trace/trace_state.ts.TraceState" xlink:href="src/trace/trace_state.ts"><text x="97.5" y="13.5" stroke="none" text-anchor="middle" data-name="TraceState">TraceState</text></a>
+
+</g>
+</g>
+<g transform="translate(4303.25, 68.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TraceState">
+
+</g>
+</g>
+<g transform="translate(4303.25, 76.5)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceState">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceState">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceState">+set(): TraceState</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceState">+unset(): TraceState</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceState">+get(): string | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceState">+serialize(): string</text>
+
+</g>
+</g>
+</g>
+<g data-name="TracerOptions">
+<g fill="lightblue" stroke="#33322E" data-name="TracerOptions">
+<rect x="4554.3" y="60.0" height="70.0" width="174.0" data-name="TracerOptions"></rect>
+<path d="M4554.3 91.0 L4728.3 91.0" fill="none" data-name="TracerOptions"></path>
+<path d="M4554.3 122.0 L4728.3 122.0" fill="none" data-name="TracerOptions"></path>
+</g>
+<g transform="translate(4554.25, 60)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TracerOptions">
+<a id="src/trace/tracer_options.ts.TracerOptions" xlink:href="src/trace/tracer_options.ts"><text x="79.0" y="13.5" stroke="none" text-anchor="middle" data-name="TracerOptions">TracerOptions</text></a>
+
+</g>
+</g>
+<g transform="translate(4554.25, 91)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TracerOptions">
+<text x="0.0" y="13.5" stroke="none" data-name="TracerOptions">+schemaUrl?: string</text>
+
+</g>
+</g>
+<g transform="translate(4554.25, 122)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TracerOptions">
+<g transform="translate(8, 8)" fill="#33322E" data-name="TracerOptions">
+
+</g>
+</g>
+</g>
+<g data-name="TraceStateImpl">
+<g fill="#eee8d5" stroke="#33322E" data-name="TraceStateImpl">
+<rect x="4259.8" y="245.0" height="183.0" width="298.0" data-name="TraceStateImpl"></rect>
+<path d="M4259.8 276.0 L4557.8 276.0" fill="none" data-name="TraceStateImpl"></path>
+<path d="M4259.8 307.0 L4557.8 307.0" fill="none" data-name="TraceStateImpl"></path>
+</g>
+<g transform="translate(4259.75, 245)" font-family="Helvetica" font-size="12pt" font-weight="bold" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="center" data-name="TraceStateImpl">
+<a id="src/trace/internal/tracestate-impl.ts.TraceStateImpl" xlink:href="src/trace/internal/tracestate-impl.ts"><text x="141.0" y="13.5" stroke="none" text-anchor="middle" data-name="TraceStateImpl">TraceStateImpl</text></a>
+
+</g>
+</g>
+<g transform="translate(4259.75, 276)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceStateImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceStateImpl">+_internalState: Map&lt;string, string&gt;</text>
+
+</g>
+</g>
+<g transform="translate(4259.75, 307)" font-family="Helvetica" font-size="12pt" font-weight="normal" font-style="normal" data-name="TraceStateImpl">
+<g transform="translate(8, 8)" fill="#33322E" text-align="left" data-name="TraceStateImpl">
+<text x="0.0" y="13.5" stroke="none" data-name="TraceStateImpl">+set(): TraceStateImpl</text>
+<text x="0.0" y="28.5" stroke="none" data-name="TraceStateImpl">+unset(): TraceStateImpl</text>
+<text x="0.0" y="43.5" stroke="none" data-name="TraceStateImpl">+get(): string | undefined</text>
+<text x="0.0" y="58.5" stroke="none" data-name="TraceStateImpl">+serialize(): string</text>
+<text x="0.0" y="73.5" stroke="none" data-name="TraceStateImpl">+_parse(): void</text>
+<text x="0.0" y="88.5" stroke="none" data-name="TraceStateImpl">+_keys(): string[]</text>
+<text x="0.0" y="103.5" stroke="none" data-name="TraceStateImpl">+_clone(): TraceStateImpl</text>
+
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</g>
+</svg>
